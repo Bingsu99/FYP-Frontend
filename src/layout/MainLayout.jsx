@@ -1,6 +1,5 @@
 import React from 'react';
 import Navbar from '../components/NavBar/NavBar';
-import './MainLayout.css'
 
 const MainLayout = ({ children, user }) => {
   return (

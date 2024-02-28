@@ -6,6 +6,7 @@ const RedirectBasedOnRole = lazy(() => import("./RedirectBasedOnRole"));
 const LoginPage = lazy(() => import('../views/Login/LoginPage'));
 const HomePage = lazy(() => import('../views/Home/HomePage'));
 const DecksPage = lazy(() => import('../views/Decks/DecksPage'));
+const DeckPage = lazy(() => import('../views/Deck/DeckPage'));
 const PatientsPage = lazy(() => import('../views/Patients/PatientsPage'));
 const UnauthorisedPage = lazy(() => import("../Pages/Unauthorised/UnauthorisedPage"));
 const PrivateRoute = lazy(() => import('./PrivateRoute'));
@@ -29,12 +30,14 @@ const AppRoutes = () => (
       <Route element={<PrivateRoute allowedRoles={['therapist']} />}>
         <Route path="/therapist" element={<PatientsPage />} />
         <Route path="/therapist/decks" element={<DecksPage />} />
+        <Route path="/therapist/decks/:deckID/" element={<DeckPage />} />
       </Route>
 
       {/* Routing for Caregiver */}
       <Route element={<PrivateRoute allowedRoles={['caregiver']} />}>
         <Route path="/caregiver" element={<PatientsPage />} />
         <Route path="/caregiver/decks" element={<DecksPage />} />
+        <Route path="/caregiver/decks/:deckID/" element={<DeckPage />} />
       </Route>
 
       {/* Fallback routes */}

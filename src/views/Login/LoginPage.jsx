@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import AccountToggle from '../../components/AccountToggle';
+import AccountToggle from '../../components/AccountToggle/AccountToggle';
 import AuthContext from "../../context/AuthContext";
 import { useNavigate } from 'react-router-dom';
 
