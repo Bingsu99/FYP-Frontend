@@ -1,33 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { Table } from 'flowbite-react';
 
-function BasicTable({ headers, items, withFilter = true, searchIndex = 0, categoriseIndex = 0, handleRowClick = null, height=72 }) {
+function BasicTable({ headers, items, withFilter = true, searchIndex = 0, categoriseIndex = 0, handleRowClick = null, height = 70 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
   const [sortConfig, setSortConfig] = useState(null);
   const [filteredItems, setFilteredItems] = useState([]);
 
   useEffect(() => {
-    let updatedItems = [...items].filter(item => 
-      item[searchIndex].toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (typeFilter ? item[categoriseIndex] === typeFilter : true)
+    let updatedItems = [...items].filter(item =>
+      item.tableData[searchIndex].toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (typeFilter ? item.tableData[categoriseIndex] === typeFilter : true)
     );
 
     if (sortConfig !== null) {
       updatedItems.sort((a, b) => {
-        if (a[sortConfig.key] === null) return 1;
-        if (b[sortConfig.key] === null) return -1;
-        if (typeof a[sortConfig.key] === 'string') {
+        if (a.tableData[sortConfig.key] === null) return 1;
+        if (b.tableData[sortConfig.key] === null) return -1;
+        if (typeof a.tableData[sortConfig.key] === 'string') {
           return (
-            sortConfig.direction === 'ascending' 
-            ? a[sortConfig.key].localeCompare(b[sortConfig.key]) 
-            : b[sortConfig.key].localeCompare(a[sortConfig.key])
+            sortConfig.direction === 'ascending'
+            ? a.tableData[sortConfig.key].localeCompare(b.tableData[sortConfig.key])
+            : b.tableData[sortConfig.key].localeCompare(a.tableData[sortConfig.key])
           );
         } else {
           return (
-            sortConfig.direction === 'ascending' 
-            ? a[sortConfig.key] - b[sortConfig.key] 
-            : b[sortConfig.key] - a[sortConfig.key]
+            sortConfig.direction === 'ascending'
+            ? a.tableData[sortConfig.key] - b.tableData[sortConfig.key]
+            : b.tableData[sortConfig.key] - a.tableData[sortConfig.key]
           );
         }
       });
@@ -52,7 +52,8 @@ function BasicTable({ headers, items, withFilter = true, searchIndex = 0, catego
     setTypeFilter(event.target.value);
   };
 
-  const uniqueTypes = [...new Set(items.map(item => item[categoriseIndex]))];
+  // Adjusted to extract tableData for type filtering
+  const uniqueTypes = [...new Set(items.map(item => item.tableData[categoriseIndex]))];
 
   return (
     <div className="overflow-x-auto p-5 pb-0">
@@ -81,7 +82,8 @@ function BasicTable({ headers, items, withFilter = true, searchIndex = 0, catego
           </div>
         </div>
       )}
-      <div className={"relative overflow-auto max-h-[" + height + "vh]"}>
+      <div className={"relative overflow-x-scroll " + heightRef[height]}>
+
         <Table hoverable>
           <Table.Head className="bg-white sticky top-0 z-10">
             {headers.map((header, index) => (
@@ -99,8 +101,8 @@ function BasicTable({ headers, items, withFilter = true, searchIndex = 0, catego
           </Table.Head>
           <Table.Body className="divide-y">
             {filteredItems.map((rowData, rowIndex) => (
-              <Table.Row key={rowIndex} onClick={() => handleRowClick ? handleRowClick(rowData) : null} className="hover:bg-gray-50">
-                {rowData.map((item, columnIndex) => (
+              <Table.Row key={rowIndex} onClick={() => handleRowClick ? handleRowClick(rowData.metaData) : null} className="hover:bg-gray-50">
+                {rowData.tableData.map((item, columnIndex) => (
                   <Table.Cell key={columnIndex}>{item}</Table.Cell>
                 ))}
               </Table.Row>
@@ -110,6 +112,14 @@ function BasicTable({ headers, items, withFilter = true, searchIndex = 0, catego
       </div>
     </div>
   );
+}
+
+const heightRef = {
+  50: "h-[50vh]",
+  55: "h-[55vh]",
+  60: "h-[60vh]",
+  65: "h-[65vh]",
+  70: "h-[70vh]",
 }
 
 export default BasicTable;

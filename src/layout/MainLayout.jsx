@@ -7,7 +7,7 @@ const MainLayout = ({ children, user }) => {
       <div className="col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-2 ">
         <Navbar user={user} />
       </div>
-      <div className="col-span-9 sm:col-span-9 md:col-span-9 lg:col-span-10 h-full pl-3">
+      <div className="col-span-9 sm:col-span-9 md:col-span-9 lg:col-span-10 pl-3">
           <main className="w-full h-full bg-white rounded-lg">
             {children}
           </main>

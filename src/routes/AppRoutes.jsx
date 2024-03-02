@@ -30,14 +30,14 @@ const AppRoutes = () => (
       <Route element={<PrivateRoute allowedRoles={['therapist']} />}>
         <Route path="/therapist" element={<PatientsPage />} />
         <Route path="/therapist/decks" element={<DecksPage />} />
-        <Route path="/therapist/decks/:deckID/" element={<DeckPage />} />
+        <Route path="/therapist/decks/:activity/:deckID/" element={<DeckPage />} />
       </Route>
 
       {/* Routing for Caregiver */}
       <Route element={<PrivateRoute allowedRoles={['caregiver']} />}>
         <Route path="/caregiver" element={<PatientsPage />} />
         <Route path="/caregiver/decks" element={<DecksPage />} />
-        <Route path="/caregiver/decks/:deckID/" element={<DeckPage />} />
+        <Route path="/caregiver/decks/:activity/:deckID/" element={<DeckPage />} />
       </Route>
 
       {/* Fallback routes */}
