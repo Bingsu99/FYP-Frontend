@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Modal, Button, Spinner } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom';
 import { serverURL, mapActivityToNumbers, mapNumbersToEndpoint } from "../../../Constants";
+import AuthContext from '../../../context/AuthContext';
 
 function DecksModal({ isOpen, closeModal }) {
     const [isCreating, setIsCreating] = useState(false);
     const [deckName, setDeckName] = useState('');
     const [activity, setActivity] = useState(0);    //Is in numbers
+    const { userID } = useContext(AuthContext);
 
     let navigate = useNavigate();
 
@@ -36,7 +38,7 @@ function DecksModal({ isOpen, closeModal }) {
             const response = await fetch('http://' + serverURL + '/' + mapNumbersToEndpoint[activity] + '/Create', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({creator:"65cf5904d17de3eaa6e44e56", name:deckName}),
+            body: JSON.stringify({creator: userID, name:deckName}),
             });
             const result = await response.json();
             navigate(activity + "/" + result["data"]["_id"])

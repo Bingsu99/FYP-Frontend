@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import AccountToggle from '../../components/AccountToggle/AccountToggle';
 import AuthContext from "../../context/AuthContext";
+import { serverURL } from "../../Constants";
 import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
@@ -8,15 +9,32 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState('patient');
+  const [authError, setAuthError] = useState(false); // State to handle auth error message
 
   let navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    login(user);
-    console.log(user);  
-    console.log('Logging in with:', email, password);
-    navigate('/' + user);
+    setAuthError(false); // Reset auth error state on new submission
+    try {
+      const response = await fetch('http://' + serverURL + "/IAM/Login", {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ type: user, email: email, password: password }),
+      });
+      const result = await response.json();
+      console.log(result)
+      if (result["status"] === "success") {
+        login(user, result["data"]["_id"]);
+        navigate('/' + user);
+      } else {
+        setAuthError(true); // Set auth error if login is not successful
+      }
+      
+    } catch (error) {
+      console.error('Error fetching data: ', error);
+      setAuthError(true); // Set auth error on fetch error
+    }
   };
 
   return (
@@ -37,6 +55,7 @@ function LoginPage() {
                 id="email-address"
                 name="email"
                 type="email"
+                autoComplete="email"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
@@ -50,6 +69,7 @@ function LoginPage() {
                 id="password"
                 name="password"
                 type="password"
+                autoComplete="current-password"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
@@ -57,6 +77,11 @@ function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+            {authError && (
+              <div className="text-red-500 text-sm text-center mt-2">
+                Invalid email or password.
+              </div>
+            )}
           </div>
 
           <div>

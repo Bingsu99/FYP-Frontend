@@ -9,8 +9,6 @@ function DeckPage() {
     const { userRole } = useContext(AuthContext); 
     let { activity, deckID } = useParams();
 
-    console.log("running in deck page")
-
     return(
         <MainLayout user={userRole}>
             {activity == 0 ? <CompleteSentenceDeck deckID={deckID}/> : ""}
