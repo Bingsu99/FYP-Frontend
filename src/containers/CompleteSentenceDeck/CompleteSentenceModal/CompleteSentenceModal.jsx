@@ -110,6 +110,7 @@ function CompleteSentenceModal({ isOpen, closeModal, rowData, isExisiting }) {
                 }
             }else{
                 params = {
+                    "activity": 0,
                     create : [{ 
                         "_id": sentences["_id"],
                         "exercises": [{
@@ -122,7 +123,7 @@ function CompleteSentenceModal({ isOpen, closeModal, rowData, isExisiting }) {
             }
             const saveData = async () => {
                 try {
-                    const response = await fetch('http://' + serverURL + '/CompleteSentenceDeck/Update', {
+                    const response = await fetch('http://' + serverURL + '/Decks/Update', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(params),
@@ -146,6 +147,7 @@ function CompleteSentenceModal({ isOpen, closeModal, rowData, isExisiting }) {
 
     const handleDelete = async () => {
         var params = {
+            "activity": 0,
             deleteData : [{
                 "_id": sentences["_id"],
                 "exerciseID": [sentences["exerciseID"]]
@@ -154,7 +156,7 @@ function CompleteSentenceModal({ isOpen, closeModal, rowData, isExisiting }) {
         
         const deleteData = async () => {
             try {
-                const response = await fetch('http://' + serverURL + '/CompleteSentenceDeck/Update', {
+                const response = await fetch('http://' + serverURL + '/Decks/Update', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(params),

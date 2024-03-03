@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext} from 'react';
 import BasicTable from '../../components/BasicTable/BasicTable';
-import {serverURL, mapActivityToNumbers} from "../../Constants"
+import {serverURL, numbersToActivityName} from "../../Constants"
 import { useNavigate } from 'react-router-dom';
 import {headers, parseToTableContent} from "./DecksConfig"
 import DecksModal from './DecksModal/DecksModal';
@@ -16,7 +16,7 @@ function Decks() {
 
 
   const handleRowClick = (metaData) => {
-      navigate(mapActivityToNumbers[metaData["activity"]] + "/" +metaData["deckID"]);
+      navigate(metaData["activity"] + "/" +metaData["deckID"]);
   } 
 
   useEffect(() => {

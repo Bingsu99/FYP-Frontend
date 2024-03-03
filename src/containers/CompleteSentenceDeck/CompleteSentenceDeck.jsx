@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import BasicTable from '../../components/BasicTable/BasicTable';
 import CompleteSentenceModal from '../../containers/CompleteSentenceDeck/CompleteSentenceModal/CompleteSentenceModal';
 import {serverURL, mapNumbersToEndpoint} from "../../Constants"
 import { useNavigate } from 'react-router-dom';
 import { emptyValues, tableHeaders, parseToTableContent } from './CompleteSentenceDeckConfig';
+import AuthContext from '../../context/AuthContext';
 
 function CompleteSentenceDeck({deckID}) {
+    const { userType } = useContext(AuthContext);
     const [openModal, setOpenModal] = useState(false);
     const [selectedRowData, setSelectedRowData] = useState(null);
     const [isExisting, setIsExisting] = useState(false);    // Track if Modal open is to do save or update operation
@@ -17,11 +19,12 @@ function CompleteSentenceDeck({deckID}) {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('http://' + serverURL + '/CompleteSentenceDeck/Read', {
+            const response = await fetch('http://' + serverURL + '/Decks/Read', {
               method: 'POST',
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({
                 "_id": deckID,
+                "activity": 0
               }),
             });
             const result = await response.json();
@@ -51,10 +54,14 @@ function CompleteSentenceDeck({deckID}) {
 
     const handleDeleteAction = async () => {
         try {
-            const response = await fetch('http://' + serverURL + '/CompleteSentenceDeck/Delete', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"_id": deckID}),
+            const response = await fetch('http://' + serverURL + '/Decks/Delete', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    "_id": deckID,
+                    "activity": 0,
+                    "userType": userType
+                }),
             });
             const result = await response.json();
         } catch (error) {
