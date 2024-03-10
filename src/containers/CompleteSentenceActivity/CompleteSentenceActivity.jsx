@@ -8,14 +8,7 @@ function CompleteSentenceActivity({ data }) {
     const mouseSensor = useSensor(MouseSensor);
     const sensors = useSensors(touchSensor, mouseSensor);
     const sentenceSplit = data.sentence.split(' ');
-    console.log(sentenceSplit);
-    var wordsToHideIndexes = [];
-
-    sentenceSplit.forEach((word, index) => {
-        if (data.wordsToHide.includes(word)) {
-            wordsToHideIndexes.push(index);
-        }
-    });
+    const wordsOptions = data.wordsToHide.concat(data.incorrectWords);
 
     // Initialize a state object to keep track of which draggable is in which droppable
     // { idOfDraggable (Key) : idOfDroppable (Value) }
@@ -73,10 +66,10 @@ function CompleteSentenceActivity({ data }) {
                 </div>
                 <div className="row-span-1 flex items-center justify-center px-5">
                     {/* Render draggables that are not assigned to a droppable */}
-                    {wordsToHideIndexes.map((index) => (
-                        !Object.values(parentAssignment).includes(sentenceSplit[index]) && (
-                            <Draggable cssStyle="sm:text-md md:text-3xl border-2 mx-5 px-5 py-3 rounded" key={sentenceSplit[index]} id={sentenceSplit[index]}>
-                                {sentenceSplit[index]}
+                    {wordsOptions.map((word) => (
+                        !Object.values(parentAssignment).includes(word) && (
+                            <Draggable cssStyle="sm:text-md md:text-3xl border-2 mx-5 px-5 py-3 rounded" key={word} id={word}>
+                                {word}
                             </Draggable>
                         )
                     ))}
