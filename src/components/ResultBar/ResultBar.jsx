@@ -5,7 +5,7 @@ import Incorrect from "../../assets/Incorrect.png"
 
 function ResultBar({children}) {
     const [isResultState, setIsResultState] = useState(false);
-    const { numberOfActivities, activitiesCount, currentActivity } = useContext(ActivityContext);
+    const { activitiesCount, currentActivity } = useContext(ActivityContext);
 
     function handleNext(){
         console.log("hello");

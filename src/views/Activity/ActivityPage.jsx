@@ -11,22 +11,29 @@ import Close from "../../assets/Close.png"
 const data = {
     activity:0,
     sentence: "Today is a good day",
-    wordsToHide: ["good", "is", "day"],
-    incorrectWords: "bad",
+    wordsToHide: ["Today", "is", "day"],
+    incorrectWords: ["bad"],
+}
+
+const data2 = {
+    "sentence": "Today is a good day",
+    "wordsToHide": ["Today", "is", "day"],
+    "incorrectWords": ["bye"],
+    "activity": 0,
 }
 
 function ActivityLayout({children}) {
     const { userRole } = useContext(AuthContext);
     const [ activityType, setActivityType ] = useState(null)
-    const { numberOfActivities, activitiesCount, currentActivity } = useContext(ActivityContext);
-
-    // Maybe can get query params from url to extract what activities and deckID. Then useEffect to load activities here.
+    const { activities, activitiesCount, currentActivity } = useContext(ActivityContext);
+    console.log(currentActivity);
 
     useEffect(() => {
         // To get from currentActivity
-        setActivityType(0);
+        setActivityType(currentActivity["activity"]);
     }, [currentActivity]);
 
+    console.log(currentActivity)
     function handleTerminate() {
         console.log("should terminate and send existing data to backend")
     }
@@ -39,15 +46,16 @@ function ActivityLayout({children}) {
                         <img src={Close} className="h-full object-contain"/>
                     </div>
                     <div className="flex-grow">
-                        {numberOfActivities !== 0 ? <Progress size="lg" progress={(activitiesCount/numberOfActivities*100)} />: ""}
+                        {activities.length !== 0 ? <Progress size="lg" progress={((activitiesCount/activities.length)*100)} />: ""}
                     </div>
                 </div>
 
                 <div className="flex-1 flex items-center p-5 justify-center bg-red-500">
-                    <CompleteSentenceActivity data={data}/>
+                    {activityType===0 ? <CompleteSentenceActivity data={data}/> : ""}
+                    
                 </div>
                 
-                <div className="rounded-b-lg">
+                <div className="rounded-b-lg">  
                     <ResultBar/>
                 </div>
             </div>

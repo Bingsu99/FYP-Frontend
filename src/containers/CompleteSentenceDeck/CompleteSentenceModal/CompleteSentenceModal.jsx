@@ -4,11 +4,12 @@ import { emptyValues} from '../CompleteSentenceDeckConfig';
 import { useNavigate } from 'react-router-dom';
 import {serverURL} from "../../../Constants"
 
+// Change from array to comma seperated
 function formatRowData(rowData) {
     if (!rowData || typeof rowData !== 'object') return rowData;
   
     const updatedRowData = {
-      ...rowData, // Spread the existing rowData to retain other properties
+      ...rowData,
       wordsToHide: rowData.wordsToHide && Array.isArray(rowData.wordsToHide) ? rowData.wordsToHide.join(', ') : '',
       incorrectWords: rowData.incorrectWords && Array.isArray(rowData.incorrectWords) ? rowData.incorrectWords.join(', ') : '',
     };
@@ -16,14 +17,17 @@ function formatRowData(rowData) {
     return updatedRowData;
 }
 
+// Change from comma seperated to array
 function parseRowData(formattedRowData) {
     if (!formattedRowData || typeof formattedRowData !== 'object') return formattedRowData;
 
     const parsedRowData = {
-        ...formattedRowData, // Spread the existing formattedRowData to retain other properties
+        ...formattedRowData,
         wordsToHide: formattedRowData.wordsToHide ? formattedRowData.wordsToHide.split(',').map(word => word.trim()) : [],
         incorrectWords: formattedRowData.incorrectWords ? formattedRowData.incorrectWords.split(',').map(word => word.trim()) : [],
     };
+
+    console.log(parsedRowData)
 
     return parsedRowData;
 } 
@@ -100,10 +104,11 @@ function CompleteSentenceModal({ isOpen, closeModal, rowData, isExisiting }) {
             // If validation passes, simulate a server request
             
             var params;
+            var parsedData = parseRowData(sentences)
 
             if (isExisiting){
-                var parsedData = parseRowData(sentences)
                 params = {
+                    "activity": 0,
                     update : [
                         parsedData
                     ]
@@ -112,15 +117,17 @@ function CompleteSentenceModal({ isOpen, closeModal, rowData, isExisiting }) {
                 params = {
                     "activity": 0,
                     create : [{ 
-                        "_id": sentences["_id"],
+                        "_id": parsedData["_id"],
                         "exercises": [{
-                            "sentence" : sentences["sentence"], 
-                            "wordsToHide": sentences["wordsToHide"],
-                            "incorrectWords": sentences["incorrectWords"]
+                            "sentence" : parsedData["sentence"], 
+                            "wordsToHide": parsedData["wordsToHide"],
+                            "incorrectWords": parsedData["incorrectWords"]
                             }]
                         }]
                 }
             }
+
+            console.log(params)
             const saveData = async () => {
                 try {
                     const response = await fetch('http://' + serverURL + '/Decks/Update', {
@@ -130,6 +137,7 @@ function CompleteSentenceModal({ isOpen, closeModal, rowData, isExisiting }) {
                     });
                     setIsSaving(true);
                     const result = await response.json();
+                    console.log(result)
                     setIsSaving(false);
                     setIsSaved(true);
                 } catch (error) {

@@ -7,11 +7,11 @@ function ActivitiesPage() {
     const { userRole } = useContext(AuthContext); // Will always be patient, cos of Protected Route
     return(
         <MainLayout user={userRole}>
-             <div className="grid grid-rows-12 p-5">
+             <div className="h-full grid grid-rows-12 p-5">
                 <div className="row-span-1 flex items-center justify-center">
-                    <h2 className="text-center text-2xl font-bold">What Activities would you like to try?</h2>
+                    <h2 className="text-center text-2xl font-bold">What activities would you like to engage in?</h2>
                 </div>
-                <div className="row-span-11">
+                <div className="row-span-11 overflow-y-auto">
                     <ActivitiesGrid/>
                 </div>
             </div>

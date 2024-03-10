@@ -6,5 +6,5 @@ export const mapActivityToNumbers = {
 }
 
 export const numbersToActivityName = {
-    0 : "Complete The Sentence"
+    0 : "Complete The Sentence",
 }

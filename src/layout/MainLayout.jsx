@@ -3,12 +3,12 @@ import Navbar from '../components/NavBar/NavBar';
 
 const MainLayout = ({ children, user }) => {
   return (
-    <div className="grid grid-cols-12 p-5 min-w-[650px]">
-      <div className="col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-2 ">
+    <div className="box-border h-screen grid grid-cols-12 p-5 min-w-[650px]">
+      <div className="box-border h-full box-border col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-2 ">
         <Navbar user={user} />
       </div>
-      <div className="col-span-9 sm:col-span-9 md:col-span-9 lg:col-span-10 pl-3">
-          <main className="w-full h-full bg-white rounded-lg">
+      <div className="box-border h-full col-span-9 sm:col-span-9 md:col-span-9 lg:col-span-10 pl-3">
+          <main className="box-border w-full h-full bg-white rounded-lg overflow-y-auto">
             {children}
           </main>
       </div>

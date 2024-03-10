@@ -21,6 +21,7 @@ const PatientsPage = lazy(() => import('../views/Patients/PatientsPage'));
 const ActivitiesPage = lazy(() => import("../views/Activities/ActivitiesPage"));
 const ActivityPage = lazy(() => import("../views/Activity/ActivityPage"));
 const CreateAccountsPage = lazy(() => import("../views/CreateAccounts/CreateAccountsPage"));
+const PatientsDeckPage = lazy(() => import("../views/PatientDecks/PatientDecksPage"));
 
 const AppRoutes = () => (
   <Suspense fallback={<div>Loading...</div>}>
@@ -36,6 +37,7 @@ const AppRoutes = () => (
         <Route path="/patient" element={<HomePage />} />
         <Route path="/patient/activities" element={<ActivitiesPage />} />
         <Route path="/patient/activity" element={<ActivityPage />} />
+        <Route path="/patient/decks/:activity" element={<PatientsDeckPage />} />
       </Route>
 
       {/* Routing for Therapist */}

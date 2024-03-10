@@ -8,6 +8,7 @@ function CompleteSentenceActivity({ data }) {
     const mouseSensor = useSensor(MouseSensor);
     const sensors = useSensors(touchSensor, mouseSensor);
     const sentenceSplit = data.sentence.split(' ');
+    console.log(sentenceSplit);
     var wordsToHideIndexes = [];
 
     sentenceSplit.forEach((word, index) => {
@@ -16,64 +17,66 @@ function CompleteSentenceActivity({ data }) {
         }
     });
 
-    // Initialize a state object to keep track of parent for each draggable
-    // { indexOfHiddenWord (Key) : indexOfTheBoxItIsAt (Value) }
-    const [parents, setParents] = useState(wordsToHideIndexes.reduce((acc, cur) => ({ ...acc, [cur]: null }), {}));
+    // Initialize a state object to keep track of which draggable is in which droppable
+    // { idOfDraggable (Key) : idOfDroppable (Value) }
+    const [parentAssignment, setParentAssignment] = useState({});
 
-    console.log(parents);
+    console.log(parentAssignment);
 
     const handleDragEnd = (event) => {
+        // Over is droppable, Active is for draggable
         const { active, over } = event;
 
-        // Update the parent for the active draggable
+        // Update which draggable is in the droppable
         if (over) {
-            // Check if the target droppable already has a draggable assigned to it
-            const isOverDroppableOccupied = Object.values(parents).includes(parseInt(over.id));
+            // Remove any previous assignment of the active draggable
+            const updatedAssignment = { ...parentAssignment };
+            Object.keys(updatedAssignment).forEach(key => {
+                if (updatedAssignment[key] === parseInt(active.id)) {
+                    delete updatedAssignment[key];
+                }
+            });
 
-            if (!isOverDroppableOccupied || parseInt(parents[active.id]) === parseInt(over.id)) {
-                // Update the parent for the active draggable if the target droppable is empty
-                // Or the draggable is moved within the same droppable
-                setParents((prevParents) => ({
-                    ...prevParents,
-                    [active.id]: parseInt(over.id),
-                }));
-            }
+            // Assign the active draggable to the new droppable
+            updatedAssignment[over.id] = parseInt(active.id);
+            setParentAssignment(updatedAssignment);
         } else {
-            // If not dropped over a droppable, reset the parent for this draggable
-            setParents((prevParents) => ({
-                ...prevParents,
-                [active.id]: null,
-            }));
+            // Remove the draggable from any droppable
+            const updatedAssignment = { ...parentAssignment };
+            Object.keys(updatedAssignment).forEach(key => {
+                if (updatedAssignment[key] === parseInt(active.id)) {
+                    delete updatedAssignment[key];
+                }
+            });
+            setParentAssignment(updatedAssignment);
         }
     };
 
     return (
         <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
             <div className="grid grid-rows-3 p-5">
-                {/* Parent is used to track draggable (key) is at which droppable (value) */}
-                {/* If word is to be hidden, put droppable. */}
                 <div className="row-span-1 flex flex-wrap items-center justify-center px-5">
-                    {sentenceSplit.map((aWordInSentence, aWordInSentenceIndex) => (
-                        wordsToHideIndexes.includes(aWordInSentenceIndex) ? (
-                            <Droppable cssStyle="bg-gray-300 flex-1 border-2 m-3 max-w-[100px] min-w-[50px] h-16 flex items-center justify-center rounded" key={aWordInSentenceIndex} id={aWordInSentenceIndex}>
-                                {/* Show draggable in droppable if from parents, it identifies that this draggable contains the droppable*/}
-                                {wordsToHideIndexes.filter(indexOfHiddenWord => parents[indexOfHiddenWord] === aWordInSentenceIndex).map(indexOfHiddenWord => (
-                                    <Draggable cssStyle="sm:text-md md:text-3xl flex-1 m-5 rounded" key={indexOfHiddenWord} id={indexOfHiddenWord}>
-                                        {sentenceSplit[indexOfHiddenWord]}
+                    {sentenceSplit.map((word, index) => (
+                        data.wordsToHide.includes(word) ? (
+                            <Droppable cssStyle="bg-gray-300 flex-1 border-2 m-3 max-w-[100px] min-w-[50px] h-16 flex items-center justify-center rounded" key={index} id={index.toString()}>
+                                {/* Render the draggable that has been assigned to this droppable */}
+                                {Object.entries(parentAssignment).filter(([key, value]) => key === index.toString()).map(([droppableId, draggableId]) => (
+                                    <Draggable cssStyle="sm:text-md md:text-3xl flex-1 m-5 rounded" key={draggableId} id={draggableId.toString()}>
+                                        {sentenceSplit[draggableId]}
                                     </Draggable>
                                 ))}
                             </Droppable>
                         ) : (
-                            <div className="sm:text-md md:text-3xl" key={aWordInSentenceIndex} >{aWordInSentence}</div>
+                            <div className="sm:text-md md:text-3xl px-2" key={index}>{word}</div>
                         )
                     ))}
                 </div>
                 <div className="row-span-1 flex items-center justify-center px-5">
-                    {/* Show draggable if draggable is not allocated */}
-                    {wordsToHideIndexes.map((indexOfHiddenWord) => (
-                        parents[indexOfHiddenWord] === null && (
-                            <Draggable cssStyle="sm:text-md md:text-3xl border-2 mx-5 px-5 py-3 rounded" key={indexOfHiddenWord} id={indexOfHiddenWord}>
-                                {sentenceSplit[indexOfHiddenWord]}
+                    {/* Render draggables that are not assigned to a droppable */}
+                    {wordsToHideIndexes.map((index) => (
+                        !Object.values(parentAssignment).includes(index) && (
+                            <Draggable cssStyle="sm:text-md md:text-3xl border-2 mx-5 px-5 py-3 rounded" key={index} id={index.toString()}>
+                                {sentenceSplit[index]}
                             </Draggable>
                         )
                     ))}

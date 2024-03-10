@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import MainLayout from "../../layout/MainLayout";
 import AuthContext from '../../context/AuthContext';
 import CompleteSentenceDeck from '../../containers/CompleteSentenceDeck/CompleteSentenceDeck';
-import {serverURL} from "../../Constants"
 
 function DeckPage() {
     const { userRole } = useContext(AuthContext); 
