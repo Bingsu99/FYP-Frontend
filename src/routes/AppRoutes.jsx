@@ -19,6 +19,7 @@ const DecksPage = lazy(() => import('../views/Decks/DecksPage'));
 const DeckPage = lazy(() => import('../views/Deck/DeckPage'));
 const PatientsPage = lazy(() => import('../views/Patients/PatientsPage'));
 const ActivitiesPage = lazy(() => import("../views/Activities/ActivitiesPage"));
+const ActivityPage = lazy(() => import("../views/Activity/ActivityPage"));
 const CreateAccountsPage = lazy(() => import("../views/CreateAccounts/CreateAccountsPage"));
 
 const AppRoutes = () => (
@@ -34,6 +35,7 @@ const AppRoutes = () => (
       <Route element={<PrivateRoute allowedRoles={['patient']} />}>
         <Route path="/patient" element={<HomePage />} />
         <Route path="/patient/activities" element={<ActivitiesPage />} />
+        <Route path="/patient/activity" element={<ActivityPage />} />
       </Route>
 
       {/* Routing for Therapist */}

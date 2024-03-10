@@ -22,6 +22,8 @@ function LoginPage() {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ type: user, email: email, password: password }),
       });
+
+      console.log({ type: user, email: email, password: password })
       const result = await response.json();
       console.log(result)
       if (result["status"] === "success") {

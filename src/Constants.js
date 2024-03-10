@@ -5,12 +5,6 @@ export const mapActivityToNumbers = {
     "Complete The Sentence" : 0
 }
 
-// Used by Decks in containers to identify endpoint to create new activity
-// To Depreciate and got through DecksManagement
-export const mapNumbersToEndpoint = {
-    0 : "CompleteSentenceDeck"
-}
-
 export const numbersToActivityName = {
     0 : "Complete The Sentence"
 }

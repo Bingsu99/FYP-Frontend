@@ -1,14 +1,14 @@
 import React, { useState, useContext } from 'react';
 import { Modal, Button, Spinner } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom';
-import { serverURL, mapActivityToNumbers, mapNumbersToEndpoint } from "../../../Constants";
+import { serverURL, mapActivityToNumbers } from "../../../Constants";
 import AuthContext from '../../../context/AuthContext';
 
 function DecksModal({ isOpen, closeModal }) {
     const [isCreating, setIsCreating] = useState(false);
     const [deckName, setDeckName] = useState('');
     const [activity, setActivity] = useState(0);    //Is in numbers
-    const { userID } = useContext(AuthContext);
+    const { userID, userRole } = useContext(AuthContext);
 
     let navigate = useNavigate();
 
@@ -35,12 +35,13 @@ function DecksModal({ isOpen, closeModal }) {
         setIsCreating(true);
         
         try {
-            const response = await fetch('http://' + serverURL + '/' + mapNumbersToEndpoint[activity] + '/Create', {
+            const response = await fetch('http://' + serverURL + '/Decks/Create', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({creator: userID, name:deckName}),
+            body: JSON.stringify({creator: userID, name:deckName, userType:userRole, activity: activity}),
             });
             const result = await response.json();
+            console.log(result);
             navigate(activity + "/" + result["data"]["_id"])
         } catch (error) {
             console.error('Error fetching data: ', error);

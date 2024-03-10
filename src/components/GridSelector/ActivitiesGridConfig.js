@@ -10,6 +10,6 @@ const sentenceCompletion = {
     link: "",
 };
 
-const activities = [repeatSentence, sentenceCompletion]
+const activities = [repeatSentence, sentenceCompletion,repeatSentence, sentenceCompletion,repeatSentence, sentenceCompletion, repeatSentence, sentenceCompletion,repeatSentence, sentenceCompletion,repeatSentence, sentenceCompletion, ]
 
 export default activities;

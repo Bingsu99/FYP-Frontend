@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import BasicTable from '../../components/BasicTable/BasicTable';
 import CompleteSentenceModal from '../../containers/CompleteSentenceDeck/CompleteSentenceModal/CompleteSentenceModal';
-import {serverURL, mapNumbersToEndpoint} from "../../Constants"
+import {serverURL} from "../../Constants"
 import { useNavigate } from 'react-router-dom';
 import { emptyValues, tableHeaders, parseToTableContent } from './CompleteSentenceDeckConfig';
 import AuthContext from '../../context/AuthContext';
