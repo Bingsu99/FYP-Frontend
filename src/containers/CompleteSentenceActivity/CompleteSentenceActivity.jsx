@@ -32,19 +32,19 @@ function CompleteSentenceActivity({ data }) {
             // Remove any previous assignment of the active draggable
             const updatedAssignment = { ...parentAssignment };
             Object.keys(updatedAssignment).forEach(key => {
-                if (updatedAssignment[key] === parseInt(active.id)) {
+                if (updatedAssignment[key] === active.id) {
                     delete updatedAssignment[key];
                 }
             });
 
             // Assign the active draggable to the new droppable
-            updatedAssignment[over.id] = parseInt(active.id);
+            updatedAssignment[over.id] = active.id;
             setParentAssignment(updatedAssignment);
         } else {
             // Remove the draggable from any droppable
             const updatedAssignment = { ...parentAssignment };
             Object.keys(updatedAssignment).forEach(key => {
-                if (updatedAssignment[key] === parseInt(active.id)) {
+                if (updatedAssignment[key] === active.id) {
                     delete updatedAssignment[key];
                 }
             });
@@ -60,9 +60,9 @@ function CompleteSentenceActivity({ data }) {
                         data.wordsToHide.includes(word) ? (
                             <Droppable cssStyle="bg-gray-300 flex-1 border-2 m-3 max-w-[100px] min-w-[50px] h-16 flex items-center justify-center rounded" key={index} id={index.toString()}>
                                 {/* Render the draggable that has been assigned to this droppable */}
-                                {Object.entries(parentAssignment).filter(([key, value]) => key === index.toString()).map(([droppableId, draggableId]) => (
-                                    <Draggable cssStyle="sm:text-md md:text-3xl flex-1 m-5 rounded" key={draggableId} id={draggableId.toString()}>
-                                        {sentenceSplit[draggableId]}
+                                {Object.entries(parentAssignment).filter(([key, value]) => key === index.toString()).map(([droppableId, draggableWord]) => (
+                                    <Draggable cssStyle="sm:text-md md:text-3xl flex-1 m-5 rounded" key={draggableWord} id={draggableWord}>
+                                        {draggableWord}
                                     </Draggable>
                                 ))}
                             </Droppable>
@@ -74,8 +74,8 @@ function CompleteSentenceActivity({ data }) {
                 <div className="row-span-1 flex items-center justify-center px-5">
                     {/* Render draggables that are not assigned to a droppable */}
                     {wordsToHideIndexes.map((index) => (
-                        !Object.values(parentAssignment).includes(index) && (
-                            <Draggable cssStyle="sm:text-md md:text-3xl border-2 mx-5 px-5 py-3 rounded" key={index} id={index.toString()}>
+                        !Object.values(parentAssignment).includes(sentenceSplit[index]) && (
+                            <Draggable cssStyle="sm:text-md md:text-3xl border-2 mx-5 px-5 py-3 rounded" key={sentenceSplit[index]} id={sentenceSplit[index]}>
                                 {sentenceSplit[index]}
                             </Draggable>
                         )
