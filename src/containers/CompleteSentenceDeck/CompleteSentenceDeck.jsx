@@ -76,7 +76,7 @@ function CompleteSentenceDeck({deckID}) {
 
     return(
         <>
-            <div className="h-[25%] lg:h-[15%] px-5 lg:px-8 pb-3 flex justify-between items-end ">
+            <div className="h-[25%] lg:h-[15%] px-5 lg:px-8 pb-3 flex justify-between items-end">
                 <div>
                     <h2 className="text-2xl lg:text-3xl font-extrabold text-gray-900">
                         {name}
