@@ -88,7 +88,7 @@ function AddDeckAccessModal({ isOpen, closeModal, patientAccess}) {
     <Modal show={isOpen} size="3xl" onClose={handleCloseModal} dismissible>
       <Modal.Header>Add Deck Access</Modal.Header>
       <Modal.Body className='p-0'>
-        <div style={{ padding: 0 }}>
+        <div className="p-5">
             <BasicTable headers={headers} items={parseToTableContent(data)} searchIndex={0} categoriseIndex={1} handleRowClick={""} height={55}/>
         </div>
       </Modal.Body>

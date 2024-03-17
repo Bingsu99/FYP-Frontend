@@ -56,7 +56,7 @@ function BasicTable({ headers, items, withFilter = true, searchIndex = 0, catego
   const uniqueTypes = [...new Set(items.map(item => item.tableData[categoriseIndex]))];
 
   return (
-    <div className="overflow-x-auto p-5 pb-0">
+    <div className="h-full">
       {withFilter && (
         <div className="grid grid-cols-12 gap-3 mb-5 items-center">
           <div className="col-span-8">
@@ -82,8 +82,7 @@ function BasicTable({ headers, items, withFilter = true, searchIndex = 0, catego
           </div>
         </div>
       )}
-      <div className={"relative overflow-x-scroll " + heightRef[height]}>
-
+      <div className="h-[80%] overflow-scroll">
         <Table hoverable>
           <Table.Head className="bg-white sticky top-0 z-10">
             {headers.map((header, index) => (

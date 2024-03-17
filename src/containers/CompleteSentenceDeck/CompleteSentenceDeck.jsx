@@ -76,13 +76,13 @@ function CompleteSentenceDeck({deckID}) {
 
     return(
         <>
-            <div className="flex justify-between items-start px-5">
+            <div className="h-[25%] lg:h-[15%] px-5 lg:px-8 pb-3 flex justify-between items-end ">
                 <div>
-                    <h2 className="text-3xl font-extrabold text-gray-900 pl-2 pt-5">
+                    <h2 className="text-2xl lg:text-3xl font-extrabold text-gray-900">
                         {name}
                     </h2>
-                    <p className="text-sm text-gray-600 pl-2 italic">Activity: Complete the Sentence</p>
-                    <p className="text-sm text-gray-600 pl-2 italic">Number of Exercises: {data.length}</p>
+                    <p className="text-sm text-gray-600 italic">Activity: Complete the Sentence</p>
+                    <p className="text-sm text-gray-600 italic">Number of Exercises: {data.length}</p>
                 </div>
                 <div className="flex space-x-2 pt-5">
                     <button onClick={handleBackAction} className="bg-white text-gray-700 font-normal text-sm py-2 px-4 rounded focus:outline-none shadow hover:shadow-md transform transition duration-300 ease-in-out">Back</button>
@@ -90,9 +90,10 @@ function CompleteSentenceDeck({deckID}) {
                     <button onClick={handleAddAction} className="bg-white text-gray-700 font-normal text-sm py-2 px-4 rounded focus:outline-none shadow hover:shadow-md transform transition duration-300 ease-in-out">Add</button>
                 </div>
             </div>
-            
-            <BasicTable headers={tableHeaders} items={data} searchIndex={0} categoriseIndex={0} handleRowClick={handleRowClick} height={70}/>
-            <CompleteSentenceModal isOpen={openModal} closeModal={() => setOpenModal(false)} rowData={selectedRowData} isExisiting={isExisting}/>
+            <div className="h-[75%] lg:h-[85%] px-5 lg:px-8">
+                <BasicTable headers={tableHeaders} items={data} searchIndex={0} categoriseIndex={0} handleRowClick={handleRowClick} height={70}/>
+                <CompleteSentenceModal isOpen={openModal} closeModal={() => setOpenModal(false)} rowData={selectedRowData} isExisiting={isExisting}/>
+            </div>
         </>
     );
 }

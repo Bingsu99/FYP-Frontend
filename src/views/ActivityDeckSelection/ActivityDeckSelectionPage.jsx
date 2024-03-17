@@ -22,7 +22,7 @@ function ActivityDeckSelectionPage() {
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({
                 "_id": userID,
-                "activity": activity
+                "activity": parseInt(activity)
               }),
             });
             const result = await response.json();
@@ -62,15 +62,17 @@ function ActivityDeckSelectionPage() {
     
     return(
         <MainLayout user={userRole}>
-            <div className="flex justify-between items-end px-5">
-                <h2 className="text-3xl font-extrabold text-gray-900 pl-2 pt-5">
+            <div className="h-[15%] lg:h-[10%] px-5 lg:px-8 pb-3 flex justify-between items-end ">
+            <h2 className="text-2xl lg:text-3xl font-extrabold text-gray-900">
                     {numbersToActivityName[activity]}
                 </h2>
                 <button onClick={()=>navigate(-1)}className="bg-white text-gray-700 font-normal text-sm py-2 px-4 rounded focus:outline-none shadow hover:shadow-md transition duration-300 ease-in-out">
                     Back
                 </button>
             </div>
+            <div className="h-[85%] lg:h-[90%] px-5 lg:px-8">
              <BasicTable headers={headers} items={decks} searchIndex={0} categoriseIndex={1} handleRowClick={handleRowClick}/>
+            </div>
         </MainLayout>
     );
 }

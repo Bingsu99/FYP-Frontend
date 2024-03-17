@@ -38,16 +38,16 @@ function PatientList() {
     }, []);
 
   return(
-        <div className="grid grid-rows-12 overflow-y-auto">
-            <div className="grid row-span-1 grid-cols-12 gap-3 px-5 items-end">
-                <h2 className="text-3xl col-span-10 font-extrabold text-gray-900 pl-2 pt-5">
-                {userRole == "therapist" ? "My Patients" : "My Care Recepients"}
+        <>
+            <div className="h-[15%] lg:h-[10%] px-5 lg:px-8 pb-3 flex justify-between items-end ">
+            <h2 className="text-2xl lg:text-3xl font-extrabold text-gray-900">
+                  {userRole == "therapist" ? "My Patients" : "My Care Recepients"}
                 </h2>
             </div>
-            <div className="row-span-11">
+            <div className="h-[85%] lg:h-[90%] px-5 lg:px-8">
                 <BasicTable headers={headers} items={decks} searchIndex={0} categoriseIndex={0} handleRowClick={handleRowClick}/>
             </div>
-        </div>
+        </>
   );
 }
 
