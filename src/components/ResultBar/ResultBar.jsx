@@ -4,29 +4,20 @@ import Correct from "../../assets/Correct.png"
 import Incorrect from "../../assets/Incorrect.png"
 
 function ResultBar({children}) {
-    const [isResultState, setIsResultState] = useState(false);
-    const { activitiesCount, currentActivity } = useContext(ActivityContext);
+    // const [isResultState, setIsResultState] = useState(false);
+    const { nextActivity, resultDisplay } = useContext(ActivityContext);
 
-    function handleNext(){
-        console.log("hello");
-        // Add next function from ActivityContext
-        setIsResultState(false)
-    }
-
-    function handleSubmit(){
-        setIsResultState(true);
-    }
 
     return(
         <>
-            {isResultState ? resultDisplay(true, "Header", "Subheader", handleNext) : submitDisplay(handleSubmit)}
+            {resultDisplay!==null && resultBar(resultDisplay.isCorrect, resultDisplay.header, resultDisplay.subheader, nextActivity)}
         </>
     );
 }
 
 export default ResultBar;
 
-function resultDisplay(result, header, subheader, onNext){
+function resultBar(result, header, subheader, onNext){
     var iconIndicator = result === true ? Correct : Incorrect
     var backgroundColour = result === true ? "bg-green-500" : "bg-red-500"
     return(
@@ -46,14 +37,6 @@ function resultDisplay(result, header, subheader, onNext){
             <div className="col-span-2 p-3 flex justify-center items-center">
                 <button onClick={onNext} className="bg-white text-gray-700 font-normal text-lg md:text-2xl md:py-2  py-1 px-3 md:px-4 rounded focus:outline-none shadow hover:shadow-md transform transition duration-300 ease-in-out">Next</button>
             </div>
-        </div>
-    )
-}
-
-function submitDisplay(onSubmit){
-    return(
-        <div className={"rounded-b-lg pb-10 flex justify-center items-cente"}>
-            <button onClick={onSubmit} className="bg-white text-gray-700 font-normal text-lg md:text-3xl md:py-2  py-1 px-3 md:px-4 rounded focus:outline-none shadow hover:shadow-md transform transition duration-300 ease-in-out">Submit</button>
         </div>
     )
 }

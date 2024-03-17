@@ -5,51 +5,48 @@ const ActivityContext = createContext();
 export default ActivityContext;
 
 export const ActivityProvider = ({ children }) => {
-    const [result, setResult] = useState([]);   // Save result of all the activities. To be sent to backend for saving
-    const [activityState, setActivityState] = useState(""); // Determine the state of ResultBar (Submit, Correct, Incorrect)
+    const [resultDisplay, setResultDisplay] = useState(null);   // Manage the headers and subheaders
     const [activitiesCount, setActivitiesCount] = useState(0);  // To track how many activities have been completed til now
     const [currentActivity, setCurrentActivity] = useState({}); // Will be determined by activity page on which activity component to load. Should have activityType(numbers) in it
     const [activities, setActivities] = useState([]);   // Save incoming activities from backend to be played by user
+    const [activityStartTime, setActivityStartTime] = useState(null);
 
     const loadActivities = (listOfActivities) => {
         resetContext();
         setActivities(listOfActivities);
         console.log(listOfActivities[0])
         setCurrentActivity(listOfActivities[0])
+        setActivityStartTime(Date.now())
+        setResultDisplay(null)
     };
 
-    // const prevActivityResult = {
-    //     activity: 0
-    //     fieldsToInputToDatabase
-    // }
-
-    const setIsResultCorrect = (result) => {
-        result === true ? setActivityState(true) : setActivityState(false);
-    }
-
-    const nextActivity = (prevActivityResult) => {
-        setResult(prevResult => [...prevResult, prevActivityResult]);
+    const nextActivity = () => {
         setCurrentActivity(activities[(activitiesCount+1)]);
         setActivitiesCount(prevCount => prevCount + 1);
-        setActivityState("submit")
-    };
-
-    // Add close then auto upload.
-    // Can have a function here to auto upload to backend so that it won't be embed in activities code.
-    const submitResult = () => {
-        // Fetch to database
-        resetContext();
+        setActivityStartTime(Date.now())
+        setResultDisplay(null)
     };
 
     const resetContext = () => {
-        setResult([]);
         setActivitiesCount(0);
         setCurrentActivity({});
         setActivities([]);
+        setResultDisplay(null)
+        setActivityStartTime(null)
     };
 
+    // To use by activities to display the bar
+    const setDisplayResponse = (isCorrect, header, subheader) =>{
+        console.log("running in setDisplayResponse")
+        setResultDisplay({
+            isCorrect: isCorrect,
+            header: header,
+            subheader: subheader
+        })
+    }
+
     return (
-        <ActivityContext.Provider value={{ activities, activityState, currentActivity, activitiesCount, nextActivity, loadActivities, submitResult, setIsResultCorrect }}>
+        <ActivityContext.Provider value={{activityStartTime, resultDisplay, activities, currentActivity, activitiesCount, nextActivity, loadActivities, setDisplayResponse }}>
             {children}
         </ActivityContext.Provider>
     );

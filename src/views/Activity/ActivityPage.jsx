@@ -8,21 +8,8 @@ import ResultBar from '../../components/ResultBar/ResultBar';
 import Close from "../../assets/Close.png"
 
 // Before navigating to this page, the previous component should call useEffect and load the exercise into context.
-const data = {
-    activity:0,
-    sentence: "Today is a good day",
-    wordsToHide: ["Today", "is", "day"],
-    incorrectWords: ["bad"],
-}
 
-const data2 = {
-    "sentence": "Today is a good day",
-    "wordsToHide": ["Today", "is", "day"],
-    "incorrectWords": ["bye"],
-    "activity": 0,
-}
-
-function ActivityLayout({children}) {
+function ActivityPage({children}) {
     const { userRole } = useContext(AuthContext);
     const [ activityType, setActivityType ] = useState(null)
     const { activities, activitiesCount, currentActivity } = useContext(ActivityContext);
@@ -51,7 +38,7 @@ function ActivityLayout({children}) {
                 </div>
 
                 <div className="flex-1 flex items-center p-5 justify-center bg-red-500">
-                    {activityType===0 ? <CompleteSentenceActivity data={data}/> : ""}
+                    {activityType===0 ? <CompleteSentenceActivity data={currentActivity}/> : ""}
                     
                 </div>
                 
@@ -64,7 +51,7 @@ function ActivityLayout({children}) {
     );
 }
 
-export default ActivityLayout;
+export default ActivityPage;
 
 // Plan is to wrap this with a context. Will have a activityType variable and data type variable.
 // Receive from backend a list of activities. each activity can have a activity type variable.

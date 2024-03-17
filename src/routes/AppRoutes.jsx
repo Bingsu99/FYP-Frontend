@@ -21,7 +21,11 @@ const PatientsPage = lazy(() => import('../views/Patients/PatientsPage'));
 const ActivitiesPage = lazy(() => import("../views/Activities/ActivitiesPage"));
 const ActivityPage = lazy(() => import("../views/Activity/ActivityPage"));
 const CreateAccountsPage = lazy(() => import("../views/CreateAccounts/CreateAccountsPage"));
-const PatientsDeckPage = lazy(() => import("../views/PatientDecks/PatientDecksPage"));
+const ActivityDeckSelectionPage = lazy(() => import("../views/ActivityDeckSelection/ActivityDeckSelectionPage"));
+const PatientsDetailsPage = lazy(() => import("../views/PatientDetails/PatientDetailsPage"));
+const PatientDecksPage = lazy(() => import("../views/PatientDecks/PatientDecksPage"));
+const StatisticPage = lazy(() => import("../views/Statistics/StatisticPage"));
+
 
 const AppRoutes = () => (
   <Suspense fallback={<div>Loading...</div>}>
@@ -37,12 +41,15 @@ const AppRoutes = () => (
         <Route path="/patient" element={<HomePage />} />
         <Route path="/patient/activities" element={<ActivitiesPage />} />
         <Route path="/patient/activity" element={<ActivityPage />} />
-        <Route path="/patient/decks/:activity" element={<PatientsDeckPage />} />
+        <Route path="/patient/decks/:activity" element={<ActivityDeckSelectionPage />} />
       </Route>
 
       {/* Routing for Therapist */}
       <Route element={<PrivateRoute allowedRoles={['therapist']} />}>
         <Route path="/therapist" element={<PatientsPage />} />
+        <Route path="/therapist/:patientID" element={<PatientsDetailsPage />} />
+        <Route path="/therapist/:patientID/Decks" element={<PatientDecksPage />} />
+        <Route path="/therapist/:patientID/Statistic" element={<StatisticPage />} />
         <Route path="/therapist/decks" element={<DecksPage />} />
         <Route path="/therapist/decks/:activity/:deckID/" element={<DeckPage />} />
         <Route path="/therapist/create" element={<CreateAccountsPage />} />
@@ -51,6 +58,9 @@ const AppRoutes = () => (
       {/* Routing for Caregiver */}
       <Route element={<PrivateRoute allowedRoles={['caregiver']} />}>
         <Route path="/caregiver" element={<PatientsPage />} />
+        <Route path="/caregiver/:patientID" element={<PatientsDetailsPage />} />
+        <Route path="/caregiver/:patientID/Decks" element={<PatientDecksPage />} />
+        <Route path="/caregiver/:patientID/Statistic" element={<StatisticPage />} />
         <Route path="/caregiver/decks" element={<DecksPage />} />
         <Route path="/caregiver/decks/:activity/:deckID/" element={<DeckPage />} />
       </Route>

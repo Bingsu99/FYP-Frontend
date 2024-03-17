@@ -120,6 +120,7 @@ const heightRef = {
   60: "h-[60vh]",
   65: "h-[65vh]",
   70: "h-[70vh]",
+  75: "h-[75vh]",
 }
 
 export default BasicTable;

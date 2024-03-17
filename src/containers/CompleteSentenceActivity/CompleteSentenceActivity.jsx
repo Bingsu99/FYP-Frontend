@@ -1,18 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { DndContext, TouchSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
+import ActivityContext from '../../context/ActivityContext';
 import Draggable from "../../components/Draggable/Draggable";
 import Droppable from "../../components/Droppable/Droppable";
+import AuthContext from '../../context/AuthContext';
+import { serverURL } from '../../Constants';
 
 function CompleteSentenceActivity({ data }) {
     const touchSensor = useSensor(TouchSensor);
     const mouseSensor = useSensor(MouseSensor);
+    const [isButtonActive, setIsButtonActive] = useState(false);
+    const [isButtonHidden, setIsButtonHidden] = useState(false);
     const sensors = useSensors(touchSensor, mouseSensor);
+    const { activityStartTime, setDisplayResponse } = useContext(ActivityContext);
+    const { userID } = useContext(AuthContext);
     const sentenceSplit = data.sentence.split(' ');
     const wordsOptions = data.wordsToHide.concat(data.incorrectWords);
 
+    var wordsToHideIndexes = [];
+    sentenceSplit.forEach((word, index) => {
+        if (data.wordsToHide.includes(word)) {
+            wordsToHideIndexes.push(index);
+        }
+    });
+
+    useEffect(()=>{
+        setParentAssignment(wordsToHideIndexes.reduce((acc, cur) => ({ ...acc, [cur]: null }), {}))
+        setIsButtonHidden(false)
+        setIsButtonActive(false)
+    }, [data])
+
     // Initialize a state object to keep track of which draggable is in which droppable
     // { idOfDraggable (Key) : idOfDroppable (Value) }
-    const [parentAssignment, setParentAssignment] = useState({});
+    const [parentAssignment, setParentAssignment] = useState(wordsToHideIndexes.reduce((acc, cur) => ({ ...acc, [cur]: null }), {}));
 
     console.log(parentAssignment);
 
@@ -26,7 +46,7 @@ function CompleteSentenceActivity({ data }) {
             const updatedAssignment = { ...parentAssignment };
             Object.keys(updatedAssignment).forEach(key => {
                 if (updatedAssignment[key] === active.id) {
-                    delete updatedAssignment[key];
+                    updatedAssignment[key] = null;
                 }
             });
 
@@ -38,16 +58,64 @@ function CompleteSentenceActivity({ data }) {
             const updatedAssignment = { ...parentAssignment };
             Object.keys(updatedAssignment).forEach(key => {
                 if (updatedAssignment[key] === active.id) {
-                    delete updatedAssignment[key];
+                    updatedAssignment[key] = null;
                 }
             });
             setParentAssignment(updatedAssignment);
         }
     };
 
+    // To Enable or Disable the button
+    useEffect(() => {
+        const allFilled = !Object.values(parentAssignment).some(value => value === null);
+        if (allFilled) {
+            setIsButtonActive(true);
+        }else{
+            setIsButtonActive(false);
+        }
+    }, [parentAssignment]);
+
+    async function handleSubmit() {   
+        setIsButtonHidden(true)
+        const activityDuration = Date.now() - activityStartTime;
+        var resultantArray = [...sentenceSplit];
+        for (const [key, value] of Object.entries(parentAssignment)) {
+            resultantArray[parseInt(key)] = wordsOptions.find(option => option === value) || resultantArray[parseInt(key)];
+        }
+        const userResponse = resultantArray.join(' ');
+        const isCorrect = userResponse === data.sentence;
+        console.log('Is user response correct:', isCorrect);
+        var params = {
+            deckID: data["deckID"],
+            userID: userID,
+            sentence: data["sentence"],
+            wordsToHide: data["wordsToHide"],
+            incorrectWords: data["incorrectWords"],
+            response: userResponse,
+            isCorrect: isCorrect,
+            duration: activityDuration,
+        }
+        try {
+            const response = await fetch('http://' + serverURL + '/ActivityResult/Add', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                "activity": 0,
+                "params": params
+                
+              }),
+            });
+            const result = await response.json();
+            console.log(result)
+            isCorrect ? setDisplayResponse(isCorrect, correctHeader, correctSubHeader):setDisplayResponse(isCorrect, incorrectHeader, incorrectSubHeader);
+        } catch (error) {
+            console.error('Error fetching data: ', error);
+        }
+    }
+
     return (
         <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
-            <div className="grid grid-rows-3 p-5">
+            <div className="grid grid-rows-3">
                 <div className="row-span-1 flex flex-wrap items-center justify-center px-5">
                     {sentenceSplit.map((word, index) => (
                         data.wordsToHide.includes(word) ? (
@@ -74,9 +142,29 @@ function CompleteSentenceActivity({ data }) {
                         )
                     ))}
                 </div>
+                <div className="flex items-center justify-center">
+                    {!isButtonHidden && <button 
+                        onClick={handleSubmit} 
+                        disabled={!isButtonActive} 
+                        className={`${
+                            isButtonActive
+                            ? "bg-white text-gray-700 hover:shadow-md"
+                            : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                        } font-normal h-20 w-36 text-lg md:text-3xl rounded focus:outline-none transform transition duration-300 ease-in-out`}
+                        >
+                        Submit
+                    </button>}
+                </div>
+                
             </div>
+            
         </DndContext>
     );
 }
+
+const correctHeader = "You got it right!";
+const correctSubHeader = "Let's try the next activity";
+const incorrectHeader = "You got it wrong";
+const incorrectSubHeader = "Let's try the next activity";
 
 export default CompleteSentenceActivity;
