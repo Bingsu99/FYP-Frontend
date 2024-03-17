@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import BasicTable from '../../components/BasicTable/BasicTable';
-import CompleteSentenceModal from '../../containers/CompleteSentenceDeck/CompleteSentenceModal/CompleteSentenceModal';
+import CompleteSentenceModal from './CompleteSentenceModal/CompleteSentenceModal';
 import {serverURL} from "../../Constants"
 import { useNavigate } from 'react-router-dom';
 import { emptyValues, tableHeaders, parseToTableContent } from './CompleteSentenceDeckConfig';
