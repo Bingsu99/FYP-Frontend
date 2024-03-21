@@ -1,7 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import { Modal, Button, Spinner } from 'flowbite-react';
-import { emptyValues} from '../CompleteSentenceDeckConfig';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {serverURL} from "../../../Constants"
 
 // Change from array to comma seperated
@@ -36,8 +35,9 @@ function CompleteSentenceModal({ isOpen, closeModal, rowData, isExisiting }) {
     const [isSaving, setIsSaving] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
-    const [sentences, setSentences] = useState(emptyValues);
+    const [sentences, setSentences] = useState({sentence: '', wordsToHide: '', incorrectWords: ''});
     const [error, setError] = useState('');
+    let { activity, deckID } = useParams();
 
     const navigate = useNavigate();
 
@@ -108,16 +108,16 @@ function CompleteSentenceModal({ isOpen, closeModal, rowData, isExisiting }) {
 
             if (isExisiting){
                 params = {
-                    "activity": 0,
+                    "activity": activity,
                     update : [
                         parsedData
                     ]
                 }
             }else{
                 params = {
-                    "activity": 0,
+                    "activity": activity,
                     create : [{ 
-                        "_id": parsedData["_id"],
+                        "_id": deckID,
                         "exercises": [{
                             "sentence" : parsedData["sentence"], 
                             "wordsToHide": parsedData["wordsToHide"],
@@ -155,7 +155,7 @@ function CompleteSentenceModal({ isOpen, closeModal, rowData, isExisiting }) {
 
     const handleDelete = async () => {
         var params = {
-            "activity": 0,
+            "activity": activity,
             deleteData : [{
                 "_id": sentences["_id"],
                 "exerciseID": [sentences["exerciseID"]]
@@ -184,6 +184,7 @@ function CompleteSentenceModal({ isOpen, closeModal, rowData, isExisiting }) {
         if (isSaved){
             navigate(0);
         }
+        setSentences({sentence: '', wordsToHide: '', incorrectWords: ''})
         setIsSaving(false);
         setIsSaved(false);
         closeModal();

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext} from 'react';
 import BasicTable from '../../components/BasicTable/BasicTable';
-import {serverURL, numbersToActivityName} from "../../Constants"
+import { serverURL } from "../../Constants"
 import { useNavigate } from 'react-router-dom';
-import {headers, parseToTableContent} from "./DecksConfig"
-import DecksModal from './DecksModal/DecksModal';
+import { headers, parseToTableContent } from "./DecksConfig"
+import { Dropdown } from 'flowbite-react';
+import CreateDeckModal from './CreateDeckModal/CreateDeckModal';
 import AuthContext from '../../context/AuthContext';
 
 
@@ -45,11 +46,15 @@ function Decks() {
                 <h2 className="text-2xl lg:text-3xl font-extrabold text-gray-900">
                     My Decks
                 </h2>
-                <button onClick={() => setOpenModal(true)} className="bg-white text-gray-700 font-normal text-sm py-2 px-4 rounded focus:outline-none shadow hover:shadow-md transform transition duration-300 ease-in-out justify-self-end">Create</button>
+                <Dropdown label="Create" className="bg-white text-gray-700">
+                  <Dropdown.Item>Manual</Dropdown.Item>
+                  <Dropdown.Item>AI</Dropdown.Item>
+                </Dropdown>
+                {/* <button onClick={() => setOpenModal(true)} className="bg-white text-gray-700 font-normal text-sm py-2 px-4 rounded focus:outline-none shadow hover:shadow-md transform transition duration-300 ease-in-out justify-self-end">Create</button> */}
             </div>
             <div className="h-[85%] lg:h-[90%] px-5 lg:px-8">
                 <BasicTable headers={headers} items={decks} searchIndex={0} categoriseIndex={1} handleRowClick={handleRowClick}/>
-                <DecksModal isOpen={openModal} closeModal={() => setOpenModal(false)}/>
+                <CreateDeckModal isOpen={openModal} closeModal={() => setOpenModal(false)}/>
             </div>
                 
           </>

@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
 import BasicTable from '../../components/BasicTable/BasicTable';
 import CompleteSentenceModal from './CompleteSentenceModal/CompleteSentenceModal';
-import {serverURL} from "../../Constants"
-import { useNavigate } from 'react-router-dom';
-import { emptyValues, tableHeaders, parseToTableContent } from './CompleteSentenceDeckConfig';
+import RepeatSentenceModal from './RepeatSentenceModal/RepeatSentenceModal';
+import {serverURL, numbersToActivityName} from "../../Constants"
+import { useNavigate, useParams } from 'react-router-dom';
+import { tableHeaders, parseToTableContent } from './DeckConfig';
 import AuthContext from '../../context/AuthContext';
 
-function CompleteSentenceDeck({deckID}) {
+function Deck() {
     const { userType } = useContext(AuthContext);
-    const [openModal, setOpenModal] = useState(false);
+    let { activity, deckID } = useParams();
+    const [openModal, setOpenModal] = useState({0:false,1:false});  // To initialise more numbers for more activities
     const [selectedRowData, setSelectedRowData] = useState(null);
     const [isExisting, setIsExisting] = useState(false);    // Track if Modal open is to do save or update operation
     const [name, setName] = useState("");
@@ -24,12 +26,12 @@ function CompleteSentenceDeck({deckID}) {
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({
                 "_id": deckID,
-                "activity": 0
+                "activity": activity
               }),
             });
             const result = await response.json();
             setName(result["data"]["name"])
-            setData(parseToTableContent(result["data"]))
+            setData(parseToTableContent[activity](result["data"]))
           } catch (error) {
             console.error('Error fetching data: ', error);
           }
@@ -38,18 +40,32 @@ function CompleteSentenceDeck({deckID}) {
         fetchData();
       }, []);
       
+
     const handleRowClick = (metaData) => {
         console.log(metaData)
         setSelectedRowData(metaData);
         setIsExisting(true);
-        setOpenModal(true);
+        setOpenModal(prevState => ({
+            ...prevState,
+            [activity]: true
+        }));
     };
+
+    const handleCloseModal = () =>{
+        setOpenModal(prevState => ({
+            ...prevState,
+            [activity]: false
+        }));
+        setSelectedRowData("");
+    }
 
     const handleAddAction = () => {
         setSelectedRowData("");
-        setOpenModal(true);
+        setOpenModal(prevState => ({
+            ...prevState,
+            [activity]: true
+        }));
         setIsExisting(false);
-        setSelectedRowData({...emptyValues, ["_id"]: deckID})   //Add Deck ObjectID for easier adding of new Data
     };
 
     const handleDeleteAction = async () => {
@@ -59,11 +75,12 @@ function CompleteSentenceDeck({deckID}) {
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     "_id": deckID,
-                    "activity": 0,
+                    "activity": activity,
                     "userType": userType
                 }),
             });
             const result = await response.json();
+            console.log(result)
         } catch (error) {
             console.error('Error fetching data: ', error);
         }
@@ -81,7 +98,7 @@ function CompleteSentenceDeck({deckID}) {
                     <h2 className="text-2xl lg:text-3xl font-extrabold text-gray-900">
                         {name}
                     </h2>
-                    <p className="text-sm text-gray-600 italic">Activity: Complete the Sentence</p>
+                    <p className="text-sm text-gray-600 italic">{"Activity: " + numbersToActivityName[activity]}</p>
                     <p className="text-sm text-gray-600 italic">Number of Exercises: {data.length}</p>
                 </div>
                 <div className="flex space-x-2 pt-5">
@@ -91,11 +108,12 @@ function CompleteSentenceDeck({deckID}) {
                 </div>
             </div>
             <div className="h-[75%] lg:h-[85%] px-5 lg:px-8">
-                <BasicTable headers={tableHeaders} items={data} searchIndex={0} categoriseIndex={0} handleRowClick={handleRowClick} height={70}/>
-                <CompleteSentenceModal isOpen={openModal} closeModal={() => setOpenModal(false)} rowData={selectedRowData} isExisiting={isExisting}/>
+                <BasicTable headers={tableHeaders[activity]} items={data} searchIndex={0} categoriseIndex={0} handleRowClick={handleRowClick} height={70}/>
+                {openModal[0]&&<CompleteSentenceModal isOpen={openModal[0]} closeModal={() => handleCloseModal()} rowData={selectedRowData} isExisiting={isExisting}/>}
+                {openModal[1]&&<RepeatSentenceModal isOpen={openModal[1]} closeModal={() => handleCloseModal()} rowData={selectedRowData} isExisiting={isExisting}/>}
             </div>
         </>
     );
 }
 
-export default CompleteSentenceDeck;
+export default Deck;

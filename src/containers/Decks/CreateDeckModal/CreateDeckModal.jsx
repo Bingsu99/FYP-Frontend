@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { serverURL, mapActivityToNumbers } from "../../../Constants";
 import AuthContext from '../../../context/AuthContext';
 
-function DecksModal({ isOpen, closeModal }) {
+function CreateDeckModal({ isOpen, closeModal }) {
     const [isCreating, setIsCreating] = useState(false);
     const [deckName, setDeckName] = useState('');
     const [activity, setActivity] = useState(0);    //Is in numbers
@@ -24,7 +24,7 @@ function DecksModal({ isOpen, closeModal }) {
     };
 
     const handleActivityChange = (event) => {
-        setActivity(event.target.value);
+        setActivity(parseInt(event.target.value));
     };
 
     const handleCreateDeck = async () => {
@@ -40,6 +40,7 @@ function DecksModal({ isOpen, closeModal }) {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({creator: userID, name:deckName, userType:userRole, activity: activity}),
             });
+            console.log({creator: userID, name:deckName, userType:userRole, activity: activity} )
             const result = await response.json();
             console.log(result);
             navigate(activity + "/" + result["data"]["_id"])
@@ -107,4 +108,4 @@ function DecksModal({ isOpen, closeModal }) {
     );
 }
 
-export default DecksModal;
+export default CreateDeckModal;

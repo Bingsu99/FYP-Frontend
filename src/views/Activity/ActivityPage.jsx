@@ -4,6 +4,7 @@ import MainLayout from "../../layout/MainLayout"
 import AuthContext from '../../context/AuthContext';
 import { Progress } from 'flowbite-react';
 import CompleteSentenceActivity from '../../containers/CompleteSentenceActivity/CompleteSentenceActivity';
+import RepeatSentenceActivity from '../../containers/RepeatSentenceActivity/RepeatSentenceActivity';
 import ResultBar from '../../components/ResultBar/ResultBar';
 import Close from "../../assets/Close.png"
 
@@ -13,11 +14,10 @@ function ActivityPage({children}) {
     const { userRole } = useContext(AuthContext);
     const [ activityType, setActivityType ] = useState(null)
     const { activities, activitiesCount, currentActivity } = useContext(ActivityContext);
-    console.log(currentActivity);
 
     useEffect(() => {
         // To get from currentActivity
-        setActivityType(currentActivity["activity"]);
+        setActivityType(currentActivity["activity"]);   
     }, [currentActivity]);
 
     console.log(currentActivity)
@@ -39,6 +39,7 @@ function ActivityPage({children}) {
 
                 <div className="flex-1 flex items-center p-5 justify-center bg-red-500">
                     {activityType===0 ? <CompleteSentenceActivity data={currentActivity}/> : ""}
+                    {activityType===1 ? <RepeatSentenceActivity data={currentActivity}/> : ""}
                     
                 </div>
                 
