@@ -8,7 +8,7 @@ import { tableHeaders, parseToTableContent } from './DeckConfig';
 import AuthContext from '../../context/AuthContext';
 
 function Deck() {
-    const { userType } = useContext(AuthContext);
+    const { userRole } = useContext(AuthContext);
     let { activity, deckID } = useParams();
     const [openModal, setOpenModal] = useState({0:false,1:false});  // To initialise more numbers for more activities
     const [selectedRowData, setSelectedRowData] = useState(null);
@@ -29,7 +29,9 @@ function Deck() {
                 "activity": activity
               }),
             });
+
             const result = await response.json();
+            console.log(result)
             setName(result["data"]["name"])
             setData(parseToTableContent[activity](result["data"]))
           } catch (error) {
@@ -76,7 +78,7 @@ function Deck() {
                 body: JSON.stringify({
                     "_id": deckID,
                     "activity": activity,
-                    "userType": userType
+                    "userType": userRole
                 }),
             });
             const result = await response.json();

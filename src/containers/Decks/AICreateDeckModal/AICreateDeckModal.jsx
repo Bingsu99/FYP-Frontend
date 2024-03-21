@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { serverURL, mapActivityToNumbers } from "../../../Constants";
 import AuthContext from '../../../context/AuthContext';
 
-function CreateDeckModal({ isOpen, closeModal }) {
+function AICreateDeckModal({ isOpen, closeModal }) {
     const [isCreating, setIsCreating] = useState(false);
     const [deckName, setDeckName] = useState('');
+    const [content, setContent] = useState('');
     const [activity, setActivity] = useState(0);    //Is in numbers
     const { userID, userRole } = useContext(AuthContext);
 
@@ -27,23 +28,39 @@ function CreateDeckModal({ isOpen, closeModal }) {
         setActivity(event.target.value);
     };
 
+    const handleContentChange = (event) => {
+        setContent(event.target.value);
+      };
+
     const handleCreateDeck = async () => {
         if (!deckName.trim()) {
             alert("Please enter a name for the deck.");
             return;
         }
         setIsCreating(true);
+
+        const params = {
+            "name": deckName,
+            "creator": userID,
+            "userType": userRole,
+            "activity": activity,
+            "numOfExercises": "5",
+            "content": content
+        }
         
         try {
-            const response = await fetch('http://' + serverURL + '/Decks/Create', {
+            const response = await fetch('http://' + serverURL + '/Decks/AIGenerate', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({creator: userID, name:deckName, userType:userRole, activity: activity}),
+            body: JSON.stringify(params),
             });
-            console.log({creator: userID, name:deckName, userType:userRole, activity: activity} )
+            
             const result = await response.json();
-            console.log(result);
-            navigate(activity + "/" + result["data"]["_id"])
+            if (result["status"]==="success"){
+                setIsCreating(false);
+                navigate(activity + "/" + result["data"]["_id"]);
+            }
+            
         } catch (error) {
             console.error('Error fetching data: ', error);
         }
@@ -52,7 +69,7 @@ function CreateDeckModal({ isOpen, closeModal }) {
     return (
         <Modal show={isOpen} size="3xl" onClose={handleCloseModal}>
             <Modal.Header>
-                Create New Deck
+                AI Create New Deck
             </Modal.Header>
             <Modal.Body>
                 <div className="space-y-4">
@@ -83,6 +100,18 @@ function CreateDeckModal({ isOpen, closeModal }) {
                             ))}
                         </select>
                     </div>
+                    <div>
+                        <label htmlFor="content" className="block text-sm font-medium text-gray-700">Content</label>
+                        <textarea 
+                            id="content" 
+                            name="content" 
+                            rows="4"
+                            className="w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:border-indigo-500"
+                            placeholder="Your content here..."
+                            value={content} // Bind the textarea value to the state
+                            onChange={handleContentChange} // Update the state on every change
+                        />
+                    </div>
                 </div>
             </Modal.Body>
             <Modal.Footer className="justify-end">
@@ -108,4 +137,4 @@ function CreateDeckModal({ isOpen, closeModal }) {
     );
 }
 
-export default CreateDeckModal;
+export default AICreateDeckModal;

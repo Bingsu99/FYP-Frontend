@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { headers, parseToTableContent } from "./DecksConfig"
 import { Dropdown } from 'flowbite-react';
 import CreateDeckModal from './CreateDeckModal/CreateDeckModal';
+import AICreateDeckModal from './AICreateDeckModal/AICreateDeckModal';
 import AuthContext from '../../context/AuthContext';
 
 
@@ -47,14 +48,15 @@ function Decks() {
                     My Decks
                 </h2>
                 <Dropdown label="Create" className="bg-white text-gray-700">
-                  <Dropdown.Item>Manual</Dropdown.Item>
-                  <Dropdown.Item>AI</Dropdown.Item>
+                  <Dropdown.Item onClick={() => setOpenModal("manual")}>Manual</Dropdown.Item>
+                  <Dropdown.Item onClick={() => setOpenModal("ai")}>AI</Dropdown.Item>
                 </Dropdown>
                 {/* <button onClick={() => setOpenModal(true)} className="bg-white text-gray-700 font-normal text-sm py-2 px-4 rounded focus:outline-none shadow hover:shadow-md transform transition duration-300 ease-in-out justify-self-end">Create</button> */}
             </div>
             <div className="h-[85%] lg:h-[90%] px-5 lg:px-8">
                 <BasicTable headers={headers} items={decks} searchIndex={0} categoriseIndex={1} handleRowClick={handleRowClick}/>
-                <CreateDeckModal isOpen={openModal} closeModal={() => setOpenModal(false)}/>
+                <CreateDeckModal isOpen={openModal==="manual"} closeModal={() => setOpenModal(null)}/>
+                <AICreateDeckModal isOpen={openModal==="ai"} closeModal={() => setOpenModal(null)}/>
             </div>
                 
           </>
