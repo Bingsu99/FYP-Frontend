@@ -220,10 +220,10 @@ function StatisticPage() {
                         </div>
                     </div>
                     <div className="w-full h-full">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="85%">
                             <BarChart
-                                width={600}
-                                height={300}
+                                // width={600}
+                                // height={300}
                                 data={graphData}
                                 margin={{
                                     top: 20,

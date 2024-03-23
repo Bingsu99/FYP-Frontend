@@ -12,7 +12,7 @@ function CompleteSentenceActivity({ data }) {
     const [isButtonActive, setIsButtonActive] = useState(false);
     const [isButtonHidden, setIsButtonHidden] = useState(false);
     const sensors = useSensors(touchSensor, mouseSensor);
-    const { activityStartTime, setDisplayResponse } = useContext(ActivityContext);
+    const { activityStartTime, handleEndOfActivity } = useContext(ActivityContext);
     const { userID } = useContext(AuthContext);
     const sentenceSplit = data.sentence.split(' ');
     const wordsOptions = data.wordsToHide.concat(data.incorrectWords);
@@ -107,7 +107,7 @@ function CompleteSentenceActivity({ data }) {
             });
             const result = await response.json();
             console.log(result)
-            isCorrect ? setDisplayResponse(isCorrect, correctHeader, correctSubHeader):setDisplayResponse(isCorrect, incorrectHeader, incorrectSubHeader);
+            isCorrect ? handleEndOfActivity(isCorrect, activityDuration, correctHeader, correctSubHeader):handleEndOfActivity(isCorrect, activityDuration, incorrectHeader, incorrectSubHeader);
         } catch (error) {
             console.error('Error fetching data: ', error);
         }
@@ -115,8 +115,8 @@ function CompleteSentenceActivity({ data }) {
 
     return (
         <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
-            <div className="grid grid-rows-3">
-                <div className="row-span-1 flex flex-wrap items-center justify-center px-5">
+            <div className="flex flex-col space-y-5">
+                <div className="row-span-1 flex flex-wrap items-center justify-center px-3">
                     {sentenceSplit.map((word, index) => (
                         data.wordsToHide.includes(word) ? (
                             <Droppable cssStyle="bg-gray-300 flex-1 border-2 m-3 max-w-[100px] min-w-[50px] h-16 flex items-center justify-center rounded" key={index} id={index.toString()}>
@@ -150,7 +150,7 @@ function CompleteSentenceActivity({ data }) {
                             isButtonActive
                             ? "bg-white text-gray-700 hover:shadow-md"
                             : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                        } font-normal h-20 w-36 text-lg md:text-3xl rounded focus:outline-none transform transition duration-300 ease-in-out`}
+                        } font-normal text-lg md:text-3xl py-2 px-4 rounded focus:outline-none transform transition duration-300 ease-in-out`}
                         >
                         Submit
                     </button>}

@@ -25,6 +25,7 @@ const ActivityDeckSelectionPage = lazy(() => import("../views/ActivityDeckSelect
 const PatientsDetailsPage = lazy(() => import("../views/PatientDetails/PatientDetailsPage"));
 const PatientDecksPage = lazy(() => import("../views/PatientDecks/PatientDecksPage"));
 const StatisticPage = lazy(() => import("../views/Statistics/StatisticPage"));
+const CompletedActivityPage = lazy(() => import("../views/Activity/CompletedActivityPage"));
 
 
 const AppRoutes = () => (
@@ -41,6 +42,7 @@ const AppRoutes = () => (
         <Route path="/patient" element={<HomePage />} />
         <Route path="/patient/activities" element={<ActivitiesPage />} />
         <Route path="/patient/activity" element={<ActivityPage />} />
+        <Route path="/patient/activity/Result" element={<CompletedActivityPage />} />
         <Route path="/patient/decks/:activity" element={<ActivityDeckSelectionPage />} />
       </Route>
 

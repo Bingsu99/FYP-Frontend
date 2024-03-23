@@ -5,6 +5,7 @@ import AuthContext from '../../context/AuthContext';
 import { Progress } from 'flowbite-react';
 import CompleteSentenceActivity from '../../containers/CompleteSentenceActivity/CompleteSentenceActivity';
 import RepeatSentenceActivity from '../../containers/RepeatSentenceActivity/RepeatSentenceActivity';
+import { useNavigate } from 'react-router-dom';
 import ResultBar from '../../components/ResultBar/ResultBar';
 import Close from "../../assets/Close.png"
 
@@ -12,17 +13,11 @@ import Close from "../../assets/Close.png"
 
 function ActivityPage({children}) {
     const { userRole } = useContext(AuthContext);
-    const [ activityType, setActivityType ] = useState(null)
     const { activities, activitiesCount, currentActivity } = useContext(ActivityContext);
+    let navigate = useNavigate();
 
-    useEffect(() => {
-        // To get from currentActivity
-        setActivityType(currentActivity["activity"]);   
-    }, [currentActivity]);
-
-    console.log(currentActivity)
     function handleTerminate() {
-        console.log("should terminate and send existing data to backend")
+        navigate('result');
     }
 
     return(
@@ -37,13 +32,13 @@ function ActivityPage({children}) {
                     </div>
                 </div>
 
-                <div className="flex-1 flex items-center p-5 justify-center bg-red-500">
-                    {activityType===0 ? <CompleteSentenceActivity data={currentActivity}/> : ""}
-                    {activityType===1 ? <RepeatSentenceActivity data={currentActivity}/> : ""}
+                <div className="flex-grow flex items-center py-3 justify-center bg-red-500">
+                    {currentActivity["activity"]===0 ? <CompleteSentenceActivity data={currentActivity}/> : ""}
+                    {currentActivity["activity"]===1 ? <RepeatSentenceActivity data={currentActivity}/> : ""}
                     
                 </div>
                 
-                <div className="rounded-b-lg">  
+                <div className="rounded-b-lg h-[15%] bg-blue-500">  
                     <ResultBar/>
                 </div>
             </div>

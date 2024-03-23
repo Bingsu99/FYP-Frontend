@@ -5,7 +5,7 @@ import { serverURL } from '../../Constants';
 import AudioRecorder from '../../components/AudioRecorder/AudioRecorder';
 
 function RepeatSentenceActivity({ data }) {
-    const { activityStartTime, setDisplayResponse } = useContext(ActivityContext);
+    const { activityStartTime, handleEndOfActivity } = useContext(ActivityContext);
     const { userID } = useContext(AuthContext);
     const [wordsInSentence, setWordsInSentence] = useState([]);
     const [isRecorded, setRecorded] = useState(false);
@@ -67,22 +67,22 @@ function RepeatSentenceActivity({ data }) {
             });
             const result = await response.json();
             console.log(result)
-            isCorrect ? setDisplayResponse(isCorrect, correctHeader, correctSubHeader):setDisplayResponse(isCorrect, incorrectHeader, incorrectSubHeader);
+            isCorrect ? handleEndOfActivity(isCorrect, activityDuration, correctHeader, correctSubHeader):handleEndOfActivity(isCorrect, activityDuration, incorrectHeader, incorrectSubHeader);
         } catch (error) {
             console.error('Error fetching data: ', error);
         }
     }
 
     return (
-        <div className="flex flex-col items-center justify-center w-full h-full p-4">
-            <div className="flex mb-4 space-x-2 justify-center w-full">
+        <div className="flex flex-col items-center justify-center w-full h-full space-y-4">
+            <div className="flex space-x-2 justify-center w-full">
                 {wordsInSentence.map((word)=>
-                    <div key={word} className="sm:text-md md:text-3xl border-2 mx-5 px-5 py-3 rounded bg-gray-300">{word}</div>
+                    <div key={word} className="sm:text-md md:text-3xl border-2 mx-5 px-5 rounded bg-gray-300">{word}</div>
                 )}
             </div>
             
             <button 
-                className="mb-4 bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded w-1/4"
+                className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold sm:text-sm md:text-lg py-2 px-4 rounded w-1/4"
                 onClick={playAudio}
             >
                 Play Sentence
@@ -100,7 +100,7 @@ function RepeatSentenceActivity({ data }) {
                         isRecorded
                         ? "bg-white text-gray-700 hover:shadow-md"
                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                    } font-normal h-20 w-36 text-lg md:text-3xl rounded focus:outline-none transform transition duration-300 ease-in-out`}
+                    } font-normal py-2 px-4 text-lg md:text-3xl rounded focus:outline-none transform transition duration-300 ease-in-out`}
                     >
                     Submit
                 </button>
