@@ -1,8 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import ActivityContext from '../../context/ActivityContext';
 import Correct from "../../assets/Correct.gif"
 import Incorrect from "../../assets/Incorrect.gif"
 import { useNavigate } from 'react-router-dom';
+import EffectCorrect from "../../assets/EffectCorrect.mp3"
+import EffectIncorrect from "../../assets/EffectIncorrect.mp3"
 
 function ResultBar(){
     let navigate = useNavigate();
@@ -11,6 +13,19 @@ function ResultBar(){
         var iconIndicator = resultDisplay.isCorrect === true ? Correct : Incorrect
         var backgroundColour = resultDisplay.isCorrect === true ? "bg-green-500" : "bg-red-500"
     }
+
+    useEffect(()=>{
+        var effect;
+        if (resultDisplay !== null){
+            if (resultDisplay.isCorrect){
+                effect = new Audio(EffectCorrect);
+            }else{
+                effect = new Audio(EffectIncorrect);
+            }
+            effect.play();
+        }
+
+    }, [resultDisplay])
     
     const handleNextActivity = () => {
         if (!nextActivity()){

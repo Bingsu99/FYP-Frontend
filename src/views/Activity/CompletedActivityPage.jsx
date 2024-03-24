@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import ActivityContext from '../../context/ActivityContext';
 import MainLayout from "../../layout/MainLayout"
 import AuthContext from '../../context/AuthContext';
 import Complete from "../../assets/Complete.gif"
 import StatCard from '../../components/StatCard/StatCard';
 import { useNavigate } from 'react-router-dom';
+import EffectCompleted from "../../assets/EffectCompleted.mp3"
 
 function convertMillisecondsToMMSS(milliseconds) {
     let seconds = Math.floor(milliseconds / 1000);
@@ -21,6 +22,11 @@ function CompletedActivityPage({children}) {
     const handleButtonClick = () => {
         navigate("/patient/activities");
     }
+
+    useEffect(()=>{
+        const effect = new Audio(EffectCompleted);
+        effect.play();
+    }, [])
 
     var numCorrect=0;
     var exercisesCompleted=0;

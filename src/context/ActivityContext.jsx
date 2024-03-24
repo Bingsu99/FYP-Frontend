@@ -25,11 +25,10 @@ export const ActivityProvider = ({ children }) => {
     };
 
     const nextActivity = () => {
-        if(activitiesCount+1 >= activities.length){
+        if(activitiesCount >= activities.length){
             return false;
         }
-        setCurrentActivity(activities[(activitiesCount+1)]);
-        setActivitiesCount(prevCount => prevCount + 1);
+        setCurrentActivity(activities[(activitiesCount)]);
         setActivityStartTime(Date.now())
         setResultDisplay(null)
         return true;
@@ -46,6 +45,7 @@ export const ActivityProvider = ({ children }) => {
 
     // To use by activities to display the bar
     const handleEndOfActivity = (isCorrect, duration, header, subheader) =>{
+        setActivitiesCount(prevCount => prevCount + 1);
         setResult([...result, {isCorrect, duration}]);
         setResultDisplay({
             isCorrect: isCorrect,
