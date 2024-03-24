@@ -12,7 +12,7 @@ export const ActivityProvider = ({ children }) => {
     const [activities, setActivities] = useState([]);   // Save incoming activities from backend to be played by user
     const [activityStartTime, setActivityStartTime] = useState(null);
 
-    console.log(result);
+    console.log(activities);
 
     const loadActivities = (listOfActivities) => {
         resetContext();
@@ -21,6 +21,7 @@ export const ActivityProvider = ({ children }) => {
         setCurrentActivity(listOfActivities[0])
         setActivityStartTime(Date.now())
         setResultDisplay(null)
+        console.log("loaded activities")
     };
 
     const nextActivity = () => {

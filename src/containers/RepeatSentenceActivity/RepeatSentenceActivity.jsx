@@ -3,6 +3,7 @@ import ActivityContext from '../../context/ActivityContext';
 import AuthContext from '../../context/AuthContext';
 import { serverURL } from '../../Constants';
 import AudioRecorder from '../../components/AudioRecorder/AudioRecorder';
+import SentenceSlot from '../../components/SentenceSlot/SentenceSlot';
 
 function RepeatSentenceActivity({ data }) {
     const { activityStartTime, handleEndOfActivity } = useContext(ActivityContext);
@@ -74,25 +75,29 @@ function RepeatSentenceActivity({ data }) {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center w-full h-full space-y-4">
-            <div className="flex space-x-2 justify-center w-full">
-                {wordsInSentence.map((word)=>
-                    <div key={word} className="sm:text-md md:text-3xl border-2 mx-5 px-5 rounded bg-gray-300">{word}</div>
-                )}
+        <div className="flex flex-col space-y-5 w-full">
+            <div className="h-[15%] text-2xl font-bold p-5">
+                    Repeat the Sentence
+                </div>
+            <div className="h-[20%] justify-center p-2">
+                <SentenceSlot words={wordsInSentence}/>
             </div>
             
-            <button 
-                className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold sm:text-sm md:text-lg py-2 px-4 rounded w-1/4"
-                onClick={playAudio}
-            >
-                Play Sentence
-            </button>
+            <div className='flex justify-center'>
+                <button 
+                    className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold sm:text-sm md:text-lg py-2 px-4 rounded w-1/4"
+                    onClick={playAudio}
+                >
+                    Play Sentence
+                </button>
+            </div>
             
-            <div className="flex space-x-4 justify-center w-full">
+            
+            <div className="flex h-[20%] space-x-4 justify-center w-full">
                 <AudioRecorder onRecordingComplete={setRecorded}/>
             </div>
 
-            <div className="flex items-center justify-center">
+            <div className="flex h-[20%] items-center justify-center">
                 <button 
                     onClick={handleSubmit} 
                     disabled={!isRecorded} 

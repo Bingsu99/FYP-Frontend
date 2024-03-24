@@ -29,7 +29,7 @@ const ActivityCard = ({activityKey, name, description, icon}) => {
   }
   return (
         <Card
-        className="sm:h-[30%] md:h-[20%] w-full"
+        className="sm:h-[30%] md:h-[20%] w-full cursor-pointer"
         imgSrc={icon}
         horizontal
         theme={customTheme}

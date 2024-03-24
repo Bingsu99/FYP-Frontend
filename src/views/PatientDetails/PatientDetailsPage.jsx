@@ -85,10 +85,10 @@ function PatientDetailsPage() {
                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>
                                         ))
                                         }
-                                        <Label value={decksPieChartData.reduce((acc, cur) => acc + cur.value, 0) + " exercises"} position="center" />
+                                        <Label value={decksPieChartData.reduce((acc, cur) => acc + cur.value, 0) + " exercises"} position="center" style={{ fontSize: '80%' }} />
                                     </Pie>
                                     <Tooltip />
-                                    <Legend />
+                                    <Legend wrapperStyle={{ fontSize: '10%' }}/>
                                     </PieChart>
                                 </ResponsiveContainer>
                         </div>

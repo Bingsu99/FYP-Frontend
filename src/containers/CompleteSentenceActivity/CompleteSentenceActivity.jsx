@@ -115,40 +115,46 @@ function CompleteSentenceActivity({ data }) {
 
     return (
         <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
-            <div className="flex flex-col space-y-5">
-                <div className="row-span-1 flex flex-wrap items-center justify-center px-3">
-                    {sentenceSplit.map((word, index) => (
-                        data.wordsToHide.includes(word) ? (
-                            <Droppable cssStyle="bg-gray-300 flex-1 border-2 m-3 max-w-[100px] min-w-[50px] h-16 flex items-center justify-center rounded" key={index} id={index.toString()}>
-                                {/* Render the draggable that has been assigned to this droppable */}
-                                {Object.entries(parentAssignment).filter(([key, value]) => key === index.toString()).map(([droppableId, draggableWord]) => (
-                                    <Draggable cssStyle="sm:text-md md:text-3xl flex-1 m-5 rounded" key={draggableWord} id={draggableWord}>
-                                        {draggableWord}
-                                    </Draggable>
-                                ))}
-                            </Droppable>
-                        ) : (
-                            <div className="sm:text-md md:text-3xl px-2" key={index}>{word}</div>
-                        )
-                    ))}
+            <div className="flex flex-col space-y-5 w-full">
+                <div className="h-[15%] text-2xl font-bold p-5">
+                    Complete the Sentence
                 </div>
-                <div className="row-span-1 flex items-center justify-center px-5">
+                <div className="h-[20%] flex justify-center px-3">
+                    <div className="flex flex-wrap justify-center items-end">
+                        {sentenceSplit.map((word, index) => (
+                            data.wordsToHide.includes(word) ? (
+                                <Droppable cssStyle="min-h-[60px] min-w-[125px] max-w-[125px] flex-1 border-b border-gray-400 flex items-end justify-center rounded" key={index} id={index.toString()}>
+                                    {/* Render the draggable that has been assigned to this droppable */}
+                                    {Object.entries(parentAssignment).filter(([key, value]) => key === index.toString()).map(([droppableId, draggableWord]) => {
+                                        return (
+                                        <Draggable cssStyle={`${draggableWord?"border-2":""} sm:text-md md:text-3xl mb-1 px-3 py-1 rounded`} key={draggableWord} id={draggableWord}>
+                                            {draggableWord}
+                                        </Draggable>)
+                                    })}
+                                </Droppable>
+                            ) : (
+                                <div className="sm:text-md md:text-3xl px-2" key={index}>{word}</div>
+                            )
+                        ))}
+                    </div>
+                </div>
+                <div className="flex h-[40%] items-center justify-center px-5 space-x-5">
                     {/* Render draggables that are not assigned to a droppable */}
                     {wordsOptions.map((word) => (
                         !Object.values(parentAssignment).includes(word) && (
-                            <Draggable cssStyle="sm:text-md md:text-3xl border-2 mx-5 px-5 py-3 rounded" key={word} id={word}>
+                            <Draggable cssStyle="sm:text-md md:text-3xl border-2 px-3 py-1 rounded" key={word} id={word}>
                                 {word}
                             </Draggable>
                         )
                     ))}
                 </div>
-                <div className="flex items-center justify-center">
+                <div className="flex h-[10%] items-center justify-center">
                     {!isButtonHidden && <button 
                         onClick={handleSubmit} 
                         disabled={!isButtonActive} 
                         className={`${
                             isButtonActive
-                            ? "bg-white text-gray-700 hover:shadow-md"
+                            ? "bg-white text-gray-700 shadow-md"
                             : "bg-gray-200 text-gray-400 cursor-not-allowed"
                         } font-normal text-lg md:text-3xl py-2 px-4 rounded focus:outline-none transform transition duration-300 ease-in-out`}
                         >

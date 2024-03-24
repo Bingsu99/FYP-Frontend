@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import ActivityContext from '../../context/ActivityContext';
 import MainLayout from "../../layout/MainLayout"
 import AuthContext from '../../context/AuthContext';
@@ -16,6 +16,12 @@ function ActivityPage({children}) {
     const { activities, activitiesCount, currentActivity } = useContext(ActivityContext);
     let navigate = useNavigate();
 
+    useEffect(()=>{
+        if (activities.length === 0){
+            navigate('/patient/activities')
+        }
+    }, [])
+
     function handleTerminate() {
         navigate('result');
     }
@@ -23,7 +29,7 @@ function ActivityPage({children}) {
     return(
         <MainLayout user={userRole}>
             <div className="flex flex-col h-full">
-                <div className="bg-blue-500 p-5 pt-8 rounded-t-lg flex flex-row items-center">
+                <div className="p-5 pt-8 rounded-t-lg flex flex-row items-center">
                     <div className="h-4 pr-3 cursor-pointer" onClick={handleTerminate}>
                         <img src={Close} className="h-full object-contain"/>
                     </div>
@@ -32,13 +38,13 @@ function ActivityPage({children}) {
                     </div>
                 </div>
 
-                <div className="flex-grow flex items-center py-3 justify-center bg-red-500">
+                <div className="flex-grow flex">
                     {currentActivity["activity"]===0 ? <CompleteSentenceActivity data={currentActivity}/> : ""}
                     {currentActivity["activity"]===1 ? <RepeatSentenceActivity data={currentActivity}/> : ""}
                     
                 </div>
                 
-                <div className="rounded-b-lg h-[15%] bg-blue-500">  
+                <div className="rounded-b-lg h-[15%]">  
                     <ResultBar/>
                 </div>
             </div>

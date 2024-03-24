@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import MainLayout from "../../layout/MainLayout"
 import AuthContext from '../../context/AuthContext';
-import ActivitiesGrid from '../../components/GridSelector/GridSelector';
 import ActivityCard from '../../components/ActivityCard/ActivityCard';
 import {activitiesMetaData} from "../../Constants"
 

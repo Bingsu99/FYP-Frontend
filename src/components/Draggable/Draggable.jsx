@@ -12,9 +12,9 @@ function Draggable({children, id, cssStyle}) {
 
   
   return (
-    <button ref={setNodeRef} style={style} {...listeners} {...attributes} className={cssStyle}>
+    <div ref={setNodeRef} style={style} {...listeners} {...attributes} className={cssStyle}>
       {children}
-    </button>
+    </div>
   );
 }
 
