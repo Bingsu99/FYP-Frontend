@@ -76,7 +76,7 @@ function RepeatSentenceActivity({ data }) {
 
     return (
         <div className="flex flex-col space-y-5 w-full">
-            <div className="h-[15%] text-2xl font-bold p-5">
+            <div className="h-[15%] sm:text-md md:text-2xl font-bold sm:py-3 sm:px-5 md:p-5">
                     Repeat the Sentence
                 </div>
             <div className="h-[20%] justify-center p-2">
@@ -85,7 +85,7 @@ function RepeatSentenceActivity({ data }) {
             
             <div className='flex justify-center'>
                 <button 
-                    className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold sm:text-sm md:text-lg py-2 px-4 rounded w-1/4"
+                    className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold sm:text-sm md:text-lg py-2 px-4 rounded"
                     onClick={playAudio}
                 >
                     Play Sentence

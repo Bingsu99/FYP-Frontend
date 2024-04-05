@@ -13,7 +13,7 @@ function CompleteSentenceActivity({ data }) {
     const [isButtonHidden, setIsButtonHidden] = useState(false);
     const sensors = useSensors(touchSensor, mouseSensor);
     const { activityStartTime, handleEndOfActivity } = useContext(ActivityContext);
-    const { userID } = useContext(AuthContext);
+    const { userRole, userID } = useContext(AuthContext);
     const sentenceSplit = data.sentence.split(' ');
     const wordsOptions = data.wordsToHide.concat(data.incorrectWords);
 
@@ -96,17 +96,20 @@ function CompleteSentenceActivity({ data }) {
             duration: activityDuration,
         }
         try {
-            const response = await fetch('http://' + serverURL + '/ActivityResult/Add', {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify({
-                "activity": 0,
-                "params": params
-                
-              }),
+            if (userRole === "patient"){
+                const response = await fetch('http://' + serverURL + '/ActivityResult/Add', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    "activity": 0,
+                    "params": params
+                    
+                }),
             });
             const result = await response.json();
             console.log(result)
+            }
+            
             isCorrect ? handleEndOfActivity(isCorrect, activityDuration, correctHeader, correctSubHeader):handleEndOfActivity(isCorrect, activityDuration, incorrectHeader, incorrectSubHeader);
         } catch (error) {
             console.error('Error fetching data: ', error);
@@ -115,15 +118,15 @@ function CompleteSentenceActivity({ data }) {
 
     return (
         <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
-            <div className="flex flex-col space-y-5 w-full">
-                <div className="h-[15%] text-2xl font-bold p-5">
+            <div className="flex flex-col sm:space-y-2 md:space-y-5 w-full">
+                <div className="h-[15%] sm:text-md md:text-2xl font-bold sm:py-3 sm:px-5 md:p-5">
                     Complete the Sentence
                 </div>
                 <div className="h-[20%] flex justify-center px-3">
                     <div className="flex flex-wrap justify-center items-end">
                         {sentenceSplit.map((word, index) => (
                             data.wordsToHide.includes(word) ? (
-                                <Droppable cssStyle="min-h-[60px] min-w-[125px] max-w-[125px] flex-1 border-b border-gray-400 flex items-end justify-center rounded" key={index} id={index.toString()}>
+                                <Droppable cssStyle="min-h-[60px] min-w-[125px] max-w-[125px] flex-1 mx-2 border-b border-gray-400 flex items-end justify-center rounded" key={index} id={index.toString()}>
                                     {/* Render the draggable that has been assigned to this droppable */}
                                     {Object.entries(parentAssignment).filter(([key, value]) => key === index.toString()).map(([droppableId, draggableWord]) => {
                                         return (
@@ -138,7 +141,7 @@ function CompleteSentenceActivity({ data }) {
                         ))}
                     </div>
                 </div>
-                <div className="flex h-[40%] items-center justify-center px-5 space-x-5">
+                <div className="flex flex-wrap h-[40%] items-center justify-center px-5 space-x-5">
                     {/* Render draggables that are not assigned to a droppable */}
                     {wordsOptions.map((word) => (
                         !Object.values(parentAssignment).includes(word) && (

@@ -6,15 +6,18 @@ import {serverURL, numbersToActivityName} from "../../Constants"
 import { useNavigate, useParams } from 'react-router-dom';
 import { tableHeaders, parseToTableContent } from './DeckConfig';
 import AuthContext from '../../context/AuthContext';
+import ActivityContext from '../../context/ActivityContext';
 
 function Deck() {
     const { userRole } = useContext(AuthContext);
+    const { loadActivities } = useContext(ActivityContext);
     let { activity, deckID } = useParams();
     const [openModal, setOpenModal] = useState({0:false,1:false});  // To initialise more numbers for more activities
     const [selectedRowData, setSelectedRowData] = useState(null);
     const [isExisting, setIsExisting] = useState(false);    // Track if Modal open is to do save or update operation
     const [name, setName] = useState("");
     const [data, setData] = useState([]);
+    const [deckExercise, setDeckExercise] = useState([]);
 
     const navigate = useNavigate();
     
@@ -33,6 +36,7 @@ function Deck() {
             const result = await response.json();
             console.log(result)
             setName(result["data"]["name"])
+            setDeckExercise(result["data"]["exercises"])
             setData(parseToTableContent[activity](result["data"]))
           } catch (error) {
             console.error('Error fetching data: ', error);
@@ -40,7 +44,7 @@ function Deck() {
         };
       
         fetchData();
-      }, []);
+    }, []);
       
 
     const handleRowClick = (metaData) => {
@@ -68,6 +72,11 @@ function Deck() {
             [activity]: true
         }));
         setIsExisting(false);
+    };
+
+    const handlePlayDeck = () => {
+        loadActivities(deckExercise);
+        navigate("/activity");
     };
 
     const handleDeleteAction = async () => {
@@ -105,6 +114,7 @@ function Deck() {
                 </div>
                 <div className="flex space-x-2 pt-5">
                     <button onClick={handleBackAction} className="bg-white text-gray-700 font-normal text-sm py-2 px-4 rounded focus:outline-none shadow hover:shadow-md transform transition duration-300 ease-in-out">Back</button>
+                    <button onClick={handlePlayDeck} className="bg-white text-gray-700 font-normal text-sm py-2 px-4 rounded focus:outline-none shadow hover:shadow-md transform transition duration-300 ease-in-out">Play Deck</button>
                     <button onClick={handleDeleteAction} className="bg-white text-gray-700 font-normal text-sm py-2 px-4 rounded focus:outline-none shadow hover:shadow-md transform transition duration-300 ease-in-out">Delete</button>
                     <button onClick={handleAddAction} className="bg-white text-gray-700 font-normal text-sm py-2 px-4 rounded focus:outline-none shadow hover:shadow-md transform transition duration-300 ease-in-out">Add</button>
                 </div>

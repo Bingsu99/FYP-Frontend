@@ -10,8 +10,6 @@ import Popup from '../../components/Popup/Popup';
 import ResultBar from '../../components/ResultBar/ResultBar';
 import Close from "../../assets/Close.png"
 
-// Before navigating to this page, the previous component should call useEffect and load the exercise into context.
-
 function calculateStreak(results) {
     let streak = 0;
   
@@ -32,26 +30,26 @@ function ActivityPage({children}) {
     const [streak, setStreak] = useState(0)
     let navigate = useNavigate();
 
-    useEffect(()=>{
-        if (activities.length === 0){
-            navigate('/patient/activities')
-        }
-    }, [])
+    // useEffect(()=>{
+    //     if (activities.length === 0){
+    //         navigate('/patient/activities')
+    //     }
+    // }, [])
 
     useEffect(()=>{
         setStreak(calculateStreak(result))
     }, [result])
 
     function handleTerminate() {
-        navigate('result');
+        navigate('/result');
     }
 
     return(
         <MainLayout user={userRole}>
             <div className="flex flex-col h-full">
                 <div className="h-[20%] md:h-[7%] px-5 rounded-t-lg flex flex-col">
-                    <div className='min-h-[30px] pt-1 pl-8'>
-                        {(streak>=2) && <Popup message={streak + " in a row!"}/>}
+                    <div className=' sm:min-h-[20px] md:min-h-[35px] pt-1 pl-8'>
+                        {(streak>=2) && <Popup message={streak + " in a row!"} className="sm:text-xs md:text-xl" />}
                     </div>
                     <div className='flex flex-row items-center'>
                         <div className="h-4 pr-3 cursor-pointer" onClick={handleTerminate}>
@@ -69,7 +67,6 @@ function ActivityPage({children}) {
                         </div>
 
                     </div>
-                    
                 </div>
 
                 <div className="flex-grow flex">
@@ -88,8 +85,3 @@ function ActivityPage({children}) {
 }
 
 export default ActivityPage;
-
-// Plan is to wrap this with a context. Will have a activityType variable and data type variable.
-// Receive from backend a list of activities. each activity can have a activity type variable.
-// Pop one off from the list. Check the activity type variable. Load component base on activity type then send state data into it.
-// Can change this to be activity view.

@@ -29,7 +29,7 @@ function ResultBar(){
     
     const handleNextActivity = () => {
         if (!nextActivity()){
-            navigate('result');
+            navigate('/result');
         }
     }
 

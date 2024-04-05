@@ -20,7 +20,8 @@ function CompletedActivityPage({children}) {
     let navigate = useNavigate();
 
     const handleButtonClick = () => {
-        navigate("/patient/activities");
+        // navigate("/patient/activities");
+        navigate(-2);
     }
 
     useEffect(()=>{

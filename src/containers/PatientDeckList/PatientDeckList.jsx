@@ -5,12 +5,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { headers, parseToTableContent } from './PatientDeckListConfig';
 import AddDeckAccessModal from './Modals/AddDeckAccessModal';
 import AuthContext from '../../context/AuthContext';
+import ActivityContext from '../../context/ActivityContext';
 
 function PatientDeckList() {
-    const { userRole, userID } = useContext(AuthContext); // Can be caregiver or therapist
+    const { userRole, userID } = useContext(AuthContext);
+    const { loadActivities } = useContext(ActivityContext);
     const [openModal, setOpenModal] = useState(false);
     const [data, setData] = useState([]);
-    const [patientExerciseAccess, setPatientExerciseAccess] = useState(null);
+    const [patientExerciseAccess, setPatientExerciseAccess] = useState([]);
     let { patientID } = useParams();
     let navigate = useNavigate();
 
@@ -25,9 +27,8 @@ function PatientDeckList() {
               }),
             });
             const result = await response.json();
-            console.log(result["data"])
             if (result["status"] === "success"){
-                setData(parseToTableContent(result["data"], patientID, navigate))
+                setData(parseToTableContent(result["data"], patientID, loadActivities, navigate))
                 setPatientExerciseAccess(result["data"].map(execise => execise._id))
             }
             

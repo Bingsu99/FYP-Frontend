@@ -71,7 +71,7 @@ function StatisticPage() {
                     body: JSON.stringify(params),
                 });
                 result = await response.json();
-                console.log(result["data"])
+                console.log(result)
             } catch (error) {
                 console.error('Error fetching data: ', error);
                 return;

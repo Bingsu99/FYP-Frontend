@@ -51,7 +51,7 @@ function ActivityDeckSelectionPage() {
                 result["data"]["exercises"]["deckID"] = result["data"]["_id"]
                 console.log(result["data"]["exercises"])
                 loadActivities(result["data"]["exercises"])
-                navigate("/patient/activity");
+                navigate("/activity");
             } catch (error) {
                 console.error('Error fetching data: ', error);
             }

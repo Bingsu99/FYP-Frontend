@@ -23,7 +23,6 @@ function AddDeckAccessModal({ isOpen, closeModal, patientAccess}) {
           body: JSON.stringify({_id: userID}),
         });
         const result = await responseCreatorAccessDecks.json();
-        console.log(result["data"])
         if (result["status"] === "success") {
             var tempButtonStates = []
             result["data"].forEach(exercise => {
@@ -41,7 +40,7 @@ function AddDeckAccessModal({ isOpen, closeModal, patientAccess}) {
       }
     };
     fetchData();
-  }, [userID]);
+  }, [userID, patientAccess]);
 
   const parseToTableContent = (data) => {
     async function onClickHandler(indx, activity, deckID, patientID) {

@@ -37,11 +37,17 @@ const AppRoutes = () => (
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/register/:token" element={<TokenRegisterPage />} />
 
+      {/* Routing for All */}
+      <Route element={<PrivateRoute allowedRoles={['patient', 'therapist', 'caregiver']} />}>
+        <Route path="/activity" element={<ActivityPage />} />
+        <Route path="/Result" element={<CompletedActivityPage />} />
+      </Route>
+
       {/* Routing for Patient */}
       <Route element={<PrivateRoute allowedRoles={['patient']} />}>
         <Route path="/patient" element={<HomePage />} />
         <Route path="/patient/activities" element={<ActivitiesPage />} />
-        <Route path="/patient/activity" element={<ActivityPage />} />
+        {/* <Route path="/patient/activity" element={<ActivityPage />} /> */}
         <Route path="/patient/activity/Result" element={<CompletedActivityPage />} />
         <Route path="/patient/decks/:activity" element={<ActivityDeckSelectionPage />} />
       </Route>
