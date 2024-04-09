@@ -8,6 +8,7 @@ function AICreateDeckModal({ isOpen, closeModal }) {
     const [isCreating, setIsCreating] = useState(false);
     const [deckName, setDeckName] = useState('');
     const [content, setContent] = useState('');
+    const [exerciseNum, setExerciseNum] = useState(0);
     const [activity, setActivity] = useState(0);    //Is in numbers
     const { userID, userRole } = useContext(AuthContext);
 
@@ -17,6 +18,7 @@ function AICreateDeckModal({ isOpen, closeModal }) {
         setIsCreating(false)
         setDeckName("")
         setActivity(0)
+        setExerciseNum(0)
         closeModal()
     }
 
@@ -30,7 +32,11 @@ function AICreateDeckModal({ isOpen, closeModal }) {
 
     const handleContentChange = (event) => {
         setContent(event.target.value);
-      };
+    };
+
+    const handleExerciseNumChange = (event) => {
+        setExerciseNum(event.target.value);
+    };
 
     const handleCreateDeck = async () => {
         if (!deckName.trim()) {
@@ -44,7 +50,7 @@ function AICreateDeckModal({ isOpen, closeModal }) {
             "creator": userID,
             "userType": userRole,
             "activity": activity,
-            "numOfExercises": "5",
+            "numOfExercises": exerciseNum,
             "content": content
         }
         
@@ -99,6 +105,19 @@ function AICreateDeckModal({ isOpen, closeModal }) {
                                 </option>
                             ))}
                         </select>
+                    </div>
+                    <div>
+                        <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">Number of Exercise</label>
+                        <input
+                            type="number"
+                            id="numOfExercise"
+                            name="numOfExercise"
+                            value={exerciseNum}
+                            onChange={handleExerciseNumChange}
+                            className="w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:border-indigo-500"
+                            min="0"
+                            max="20"
+                        />
                     </div>
                     <div>
                         <label htmlFor="content" className="block text-sm font-medium text-gray-700">Content</label>

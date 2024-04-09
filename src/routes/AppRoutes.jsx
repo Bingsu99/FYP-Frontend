@@ -26,6 +26,7 @@ const PatientsDetailsPage = lazy(() => import("../views/PatientDetails/PatientDe
 const PatientDecksPage = lazy(() => import("../views/PatientDecks/PatientDecksPage"));
 const StatisticPage = lazy(() => import("../views/Statistics/StatisticPage"));
 const CompletedActivityPage = lazy(() => import("../views/Activity/CompletedActivityPage"));
+const PatientAssignmentPage = lazy(() => import("../views/PatientAssignment/PatientAssignmentPage"))
 
 
 const AppRoutes = () => (
@@ -58,17 +59,19 @@ const AppRoutes = () => (
         <Route path="/therapist/:patientID" element={<PatientsDetailsPage />} />
         <Route path="/therapist/:patientID/Decks" element={<PatientDecksPage />} />
         <Route path="/therapist/:patientID/Statistic" element={<StatisticPage />} />
+        <Route path="/therapist/:patientID/DailyAssignment" element={<PatientAssignmentPage />} />
         <Route path="/therapist/decks" element={<DecksPage />} />
         <Route path="/therapist/decks/:activity/:deckID/" element={<DeckPage />} />
         <Route path="/therapist/create" element={<CreateAccountsPage />} />
       </Route>
-
+      
       {/* Routing for Caregiver */}
       <Route element={<PrivateRoute allowedRoles={['caregiver']} />}>
         <Route path="/caregiver" element={<PatientsPage />} />
         <Route path="/caregiver/:patientID" element={<PatientsDetailsPage />} />
         <Route path="/caregiver/:patientID/Decks" element={<PatientDecksPage />} />
         <Route path="/caregiver/:patientID/Statistic" element={<StatisticPage />} />
+        <Route path="/caregiver/:patientID/DailyAssignment" element={<PatientAssignmentPage />} />
         <Route path="/caregiver/decks" element={<DecksPage />} />
         <Route path="/caregiver/decks/:activity/:deckID/" element={<DeckPage />} />
       </Route>

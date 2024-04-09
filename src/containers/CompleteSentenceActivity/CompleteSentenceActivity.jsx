@@ -97,12 +97,13 @@ function CompleteSentenceActivity({ data }) {
         }
         try {
             if (userRole === "patient"){
-                const response = await fetch('http://' + serverURL + '/ActivityResult/Add', {
+                const response = await fetch('http://' + serverURL + '/ResultManagement/Add', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     "activity": 0,
-                    "params": params
+                    "params": params,
+                    "dailyAssignment": data["dailyAssignment"] ? data["dailyAssignment"] : false
                     
                 }),
             });

@@ -12,7 +12,7 @@ function RepeatSentenceActivity({ data }) {
     const [isRecorded, setRecorded] = useState(false);
     const [recording, setRecording] = useState(null);
 
-    console.log(isRecorded)
+    console.log(data)
 
     useEffect(() => {
         console.log(data)
@@ -45,6 +45,24 @@ function RepeatSentenceActivity({ data }) {
         }
     }
 
+    async function handleGetTranscribe() {
+        const formData = new FormData();
+        formData.append('file', isRecorded["file"]);
+        try {
+            const response = await fetch('http://' + serverURL + '/RepeatSentenceRoute/Transcribe', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+            console.log(result)
+            if (result["status"]==="success"){
+                return result["data"]["key"];
+            }
+        } catch (error) {
+            console.error('Error fetching data: ', error);
+        }
+    }
+
     async function handleSubmit() {   
         const activityDuration = Date.now() - activityStartTime;
         
@@ -57,12 +75,13 @@ function RepeatSentenceActivity({ data }) {
             duration: activityDuration,
         }
         try {
-            const response = await fetch('http://' + serverURL + '/ActivityResult/Add', {
+            const response = await fetch('http://' + serverURL + '/ResultManagement/Add', {
               method: 'POST',
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({
                 "activity": data["activity"],
-                "params": params
+                "params": params,
+                "dailyAssignment": data["dailyAssignment"] ? data["dailyAssignment"] : false
                 
               }),
             });
@@ -99,7 +118,7 @@ function RepeatSentenceActivity({ data }) {
 
             <div className="flex h-[20%] items-center justify-center">
                 <button 
-                    onClick={handleSubmit} 
+                    onClick={handleGetTranscribe} 
                     disabled={!isRecorded} 
                     className={`${
                         isRecorded

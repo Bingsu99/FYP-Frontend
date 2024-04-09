@@ -37,27 +37,27 @@ function ActivityDeckSelectionPage() {
       }, []);
 
     const handleRowClick = (metaData) => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch('http://' + serverURL + '/Decks/Read', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    "_id": metaData["deckID"],
-                    "activity": metaData["activity"]
-                }),
-                });
-                const result = await response.json();
-                result["data"]["exercises"]["deckID"] = result["data"]["_id"]
-                console.log(result["data"]["exercises"])
-                loadActivities(result["data"]["exercises"])
-                navigate("/activity");
-            } catch (error) {
-                console.error('Error fetching data: ', error);
-            }
-        };
-        
-        fetchData();
+      const fetchData = async () => {
+          try {
+            const response = await fetch('http://' + serverURL + '/Decks/Read', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                "_id": metaData["deckID"],
+                "activity": metaData["activity"]
+            }),
+            });
+            const result = await response.json();
+            result["data"]["exercises"]["deckID"] = result["data"]["_id"]
+            console.log(result["data"]["exercises"])
+            loadActivities(result["data"]["exercises"])
+            navigate("/activity");
+          } catch (error) {
+              console.error('Error fetching data: ', error);
+          }
+      };
+      
+      fetchData();
     } 
     
     return(

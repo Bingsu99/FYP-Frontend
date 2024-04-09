@@ -27,7 +27,7 @@ function LoginPage() {
       const result = await response.json();
       console.log(result)
       if (result["status"] === "success") {
-        login(user, result["data"]["_id"]);
+        login(user, result["data"]["_id"], result["data"]["name"]);
         navigate('/' + user);
       } else {
         setAuthError(true); // Set auth error if login is not successful

@@ -66,7 +66,7 @@ function RegisterPage() {
         console.log(result)
 
         if (result["status"] === "success"){
-          login(userType, result["data"]["_id"])
+          login(userType, result["data"]["_id"], result["data"]["name"]);
           navigate('/'+ userType);
         }else{
           navigate('/unauthorized');

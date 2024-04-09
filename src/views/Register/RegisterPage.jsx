@@ -40,7 +40,7 @@ function RegisterPage() {
         const result = await response.json();
         console.log(result)
         if (result["status"] == "success"){
-            login(userType, result["data"]["_id"]);
+            login(userType, result["data"]["_id"], result["data"]["name"]);
             navigate('/' + userType);
         }
         

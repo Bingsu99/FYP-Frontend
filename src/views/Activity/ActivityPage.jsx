@@ -30,12 +30,6 @@ function ActivityPage({children}) {
     const [streak, setStreak] = useState(0)
     let navigate = useNavigate();
 
-    // useEffect(()=>{
-    //     if (activities.length === 0){
-    //         navigate('/patient/activities')
-    //     }
-    // }, [])
-
     useEffect(()=>{
         setStreak(calculateStreak(result))
     }, [result])
@@ -70,8 +64,8 @@ function ActivityPage({children}) {
                 </div>
 
                 <div className="flex-grow flex">
-                    {currentActivity["activity"]===0 ? <CompleteSentenceActivity data={currentActivity}/> : ""}
-                    {currentActivity["activity"]===1 ? <RepeatSentenceActivity data={currentActivity}/> : ""}
+                    {parseInt(currentActivity["activity"])===0 ? <CompleteSentenceActivity data={currentActivity}/> : ""}
+                    {parseInt(currentActivity["activity"])===1 ? <RepeatSentenceActivity data={currentActivity}/> : ""}
                     
                 </div>
                 
