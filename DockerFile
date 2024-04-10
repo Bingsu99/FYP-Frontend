@@ -1,0 +1,32 @@
+# Step 1: Build the React application
+# Use a Node.js image to build the project
+FROM node:alpine as build-stage
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json (or yarn.lock) files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of your app's source code
+COPY . .
+
+# Build your app
+RUN npm run build
+
+# Step 2: Set up the Nginx server to serve the app
+# Use an Nginx image to serve the built app
+FROM nginx:alpine as production-stage
+
+# Copy the built app from the previous stage
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+
+# Expose port 80 to the outside once the container has launched
+EXPOSE 80
+
+# Define the command to run your app using CMD which defines your runtime
+# Here we are using Nginx to serve the static site
+CMD ["nginx", "-g", "daemon off;"]

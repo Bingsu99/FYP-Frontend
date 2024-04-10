@@ -4,21 +4,26 @@ import AuthContext from '../../context/AuthContext';
 import { serverURL } from '../../Constants';
 import AudioRecorder from '../../components/AudioRecorder/AudioRecorder';
 import SentenceSlot from '../../components/SentenceSlot/SentenceSlot';
+import gestaltSimilarity from "gestalt-pattern-matcher";
 
 function RepeatSentenceActivity({ data }) {
     const { activityStartTime, handleEndOfActivity } = useContext(ActivityContext);
     const { userID } = useContext(AuthContext);
+    const [isLoading, setIsLoading] = useState(false);
     const [wordsInSentence, setWordsInSentence] = useState([]);
-    const [isRecorded, setRecorded] = useState(false);
+    const [isRecorded, setRecorded] = useState(null);
     const [recording, setRecording] = useState(null);
-
-    console.log(data)
+    const [forceReset, setForceReset] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
 
     useEffect(() => {
         console.log(data)
         getAudioAccess();
         setWordsInSentence(data["sentence"].split(" "))
-    }, []);
+        setForceReset((prev)=>!prev);
+        setRecorded(null)
+        setSubmitted(false)
+    }, [data]);
 
     const playAudio = () => {   
         recording.play()
@@ -56,7 +61,7 @@ function RepeatSentenceActivity({ data }) {
             const result = await response.json();
             console.log(result)
             if (result["status"]==="success"){
-                return result["data"]["key"];
+                return result["data"];
             }
         } catch (error) {
             console.error('Error fetching data: ', error);
@@ -65,15 +70,36 @@ function RepeatSentenceActivity({ data }) {
 
     async function handleSubmit() {   
         const activityDuration = Date.now() - activityStartTime;
+        setIsLoading(true);
         
-        const isCorrect = "Validation Function to Check if Correct or Wrong";
+        var response = await handleGetTranscribe();
+        console.log(response)
+        var similarity = gestaltSimilarity(data["sentence"], response["transcribe"]);
+
+        var isCorrect;
+        if (similarity >= 0.75){
+            isCorrect = true;
+        }else{
+            isCorrect = false;
+        }
+
+        var transcribe = response["transcribe"]
+        if (transcribe === ""){
+            transcribe = "Invalid";
+        }
 
         var params = {
             deckID: data["deckID"],
             userID: userID,
+            sentence: data["sentence"],
+            response: transcribe,
+            recording: response["key"],
+            similarity: similarity,
             isCorrect: isCorrect,
             duration: activityDuration,
         }
+
+        console.log(params)
         try {
             const response = await fetch('http://' + serverURL + '/ResultManagement/Add', {
               method: 'POST',
@@ -87,7 +113,9 @@ function RepeatSentenceActivity({ data }) {
             });
             const result = await response.json();
             console.log(result)
-            isCorrect ? handleEndOfActivity(isCorrect, activityDuration, correctHeader, correctSubHeader):handleEndOfActivity(isCorrect, activityDuration, incorrectHeader, incorrectSubHeader);
+            setIsLoading(false);
+            setSubmitted(true)
+            isCorrect ? handleEndOfActivity(isCorrect, activityDuration, correctHeader, correctSubHeader):handleEndOfActivity(isCorrect, activityDuration, incorrectHeader, incorrectSubHeader + transcribe);
         } catch (error) {
             console.error('Error fetching data: ', error);
         }
@@ -99,7 +127,7 @@ function RepeatSentenceActivity({ data }) {
                     Repeat the Sentence
                 </div>
             <div className="h-[20%] justify-center p-2">
-                <SentenceSlot words={wordsInSentence}/>
+                <SentenceSlot key={forceReset} words={wordsInSentence}/>
             </div>
             
             <div className='flex justify-center'>
@@ -113,21 +141,21 @@ function RepeatSentenceActivity({ data }) {
             
             
             <div className="flex h-[20%] space-x-4 justify-center w-full">
-                <AudioRecorder onRecordingComplete={setRecorded}/>
+                <AudioRecorder key={forceReset} onRecordingComplete={setRecorded}/>
             </div>
 
             <div className="flex h-[20%] items-center justify-center">
-                <button 
-                    onClick={handleGetTranscribe} 
-                    disabled={!isRecorded} 
+                {!submitted&&<button 
+                    onClick={handleSubmit} 
+                    disabled={!isRecorded || (isLoading && isRecorded)} 
                     className={`${
-                        isRecorded
+                        isRecorded && !isLoading
                         ? "bg-white text-gray-700 hover:shadow-md"
                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
                     } font-normal py-2 px-4 text-lg md:text-3xl rounded focus:outline-none transform transition duration-300 ease-in-out`}
                     >
-                    Submit
-                </button>
+                    {isLoading ? "Submitting" : "Submit"}
+                </button>}
             </div>
 
             
@@ -136,8 +164,8 @@ function RepeatSentenceActivity({ data }) {
 }
 
 const correctHeader = "You got it right!";
-const correctSubHeader = "Let's try the next activity";
+const correctSubHeader = "Let's try the next activity!";
 const incorrectHeader = "You got it wrong";
-const incorrectSubHeader = "Let's try the next activity";
+const incorrectSubHeader = "Sounds like: ";
 
 export default RepeatSentenceActivity;

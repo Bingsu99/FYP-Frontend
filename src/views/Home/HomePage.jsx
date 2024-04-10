@@ -130,12 +130,13 @@ function HomePage() {
 }
 
 function isToday(dateString) {
-    const inputDate = new Date(dateString);
     const today = new Date();
-  
-    return inputDate.getUTCFullYear() === today.getUTCFullYear() &&
-           inputDate.getUTCMonth() === today.getUTCMonth() &&
-           inputDate.getUTCDate() === today.getUTCDate();
+    today.setHours(0, 0, 0, 0);
+
+    const inputDate = new Date(dateString);
+    inputDate.setHours(0, 0, 0, 0);
+
+    return inputDate.getTime() === today.getTime();
 }
 
 export default HomePage;
